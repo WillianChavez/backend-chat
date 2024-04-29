@@ -1,10 +1,19 @@
-import { Table, Model, Column, PrimaryKey, AutoIncrement, HasMany } from 'sequelize-typescript';
+import {
+  Table,
+  Model,
+  Column,
+  PrimaryKey,
+  AutoIncrement,
+  HasMany,
+  HasOne,
+} from 'sequelize-typescript';
 import PreferenciaChat from './preferencia-chat.model';
 import UsuarioChat from './usuario-chat.model';
 import LecturaMensaje from './lectura-mensaje.model';
 import ReaccionMensaje from './reaccion-mensaje.model';
 import ContactoUsuario from './contacto-usuario.model';
 import ContactoBloqueado from './contacto-bloqueado.model';
+import Perfil from './perfil.model';
 
 @Table({
   tableName: 'mnt_usuario',
@@ -20,6 +29,9 @@ export default class Usuario extends Model {
 
   @Column
   contra: string;
+
+  @HasOne(() => Perfil)
+  perfil: Perfil;
 
   @HasMany(() => PreferenciaChat)
   preferencias: PreferenciaChat[];

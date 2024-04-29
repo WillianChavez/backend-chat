@@ -6,10 +6,14 @@ import {
   ForeignKey,
   Model,
   PrimaryKey,
+  Table,
 } from 'sequelize-typescript';
 import Mensaje from './mensaje.model';
 import Usuario from './usuario.model';
 
+@Table({
+  tableName: 'mnt_lectura_mensaje',
+})
 export default class LecturaMensaje extends Model {
   @PrimaryKey
   @AutoIncrement

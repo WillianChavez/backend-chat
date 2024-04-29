@@ -14,6 +14,7 @@ import ReaccionMensaje from './reaccion-mensaje.model';
 import ContactoUsuario from './contacto-usuario.model';
 import ContactoBloqueado from './contacto-bloqueado.model';
 import Perfil from './perfil.model';
+import DobleFactorUsuario from './doble-factor-usuario.model';
 
 @Table({
   tableName: 'mnt_usuario',
@@ -29,6 +30,9 @@ export default class Usuario extends Model {
 
   @Column
   contra: string;
+
+  @HasMany(() => DobleFactorUsuario)
+  dobleFactor: DobleFactorUsuario[];
 
   @HasOne(() => Perfil)
   perfil: Perfil;

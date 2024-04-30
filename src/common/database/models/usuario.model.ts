@@ -15,6 +15,9 @@ import ContactoUsuario from './contacto-usuario.model';
 import ContactoBloqueado from './contacto-bloqueado.model';
 import Perfil from './perfil.model';
 import DobleFactorUsuario from './doble-factor-usuario.model';
+import DispositivoVinculado from './dispositivo-vinculado.model';
+import PreferenciaUsuario from './preferencia-usuario.model';
+import PreferenciaNotificacion from './preferencia-notificacion.model';
 
 @Table({
   tableName: 'mnt_usuario',
@@ -60,4 +63,13 @@ export default class Usuario extends Model {
 
   @HasMany(() => ContactoBloqueado, 'idContacto')
   contactosBloqueadosDe: ContactoBloqueado[];
+
+  @HasMany(() => DispositivoVinculado)
+  dispositivosVinculados: DispositivoVinculado[];
+
+  @HasMany(() => PreferenciaUsuario)
+  preferenciasUsuario: PreferenciaUsuario[];
+
+  @HasMany(() => PreferenciaNotificacion)
+  preferenciasNotificacion: PreferenciaNotificacion[];
 }

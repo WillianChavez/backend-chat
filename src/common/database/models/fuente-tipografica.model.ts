@@ -1,4 +1,5 @@
-import { AutoIncrement, Column, PrimaryKey, Table, Model } from 'sequelize-typescript';
+import { AutoIncrement, Column, PrimaryKey, Table, Model, HasMany } from 'sequelize-typescript';
+import PreferenciaUsuario from './preferencia-usuario.model';
 
 @Table({
   tableName: 'ctl_fuente_tipografica',
@@ -11,4 +12,7 @@ export default class FuenteTipografica extends Model {
 
   @Column
   nombre: string;
+
+  @HasMany(() => PreferenciaUsuario)
+  preferenciaUsuarios: PreferenciaUsuario[];
 }

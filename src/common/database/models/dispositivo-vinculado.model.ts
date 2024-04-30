@@ -2,6 +2,7 @@ import {
   AutoIncrement,
   BelongsTo,
   Column,
+  CreatedAt,
   ForeignKey,
   Model,
   PrimaryKey,
@@ -10,29 +11,23 @@ import {
 import Usuario from './usuario.model';
 
 @Table({
-  tableName: 'mnt_perfil',
+  tableName: 'mnt_dispositivo_vinculado',
 })
-export default class Perfil extends Model {
-  @AutoIncrement
+export default class DispositivoVinculado extends Model {
   @PrimaryKey
+  @AutoIncrement
   @Column
   id: number;
-
-  @Column
-  nombre: string;
-
-  @Column
-  biografia: string;
-
-  @Column
-  foto: string;
-
-  @Column
-  correo: string;
 
   @ForeignKey(() => Usuario)
   idUsuario: number;
 
   @BelongsTo(() => Usuario)
   usuario: Usuario;
+
+  @Column
+  nombreDispositivo: string;
+
+  @CreatedAt
+  fecha: Date;
 }

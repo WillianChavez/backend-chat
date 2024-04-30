@@ -10,25 +10,28 @@ import {
 import Usuario from './usuario.model';
 
 @Table({
-  tableName: 'mnt_perfil',
+  tableName: 'mnt_preferencia_notificacion',
 })
-export default class Perfil extends Model {
-  @AutoIncrement
+export default class PreferenciaNotificacion extends Model {
   @PrimaryKey
+  @AutoIncrement
   @Column
   id: number;
 
   @Column
-  nombre: string;
+  silenciadas: boolean;
 
   @Column
-  biografia: string;
+  activoHorarioNotificacion: boolean;
 
   @Column
-  foto: string;
+  horaInicio: Date;
 
   @Column
-  correo: string;
+  horaFin: Date;
+
+  @Column
+  fondoColor: string;
 
   @ForeignKey(() => Usuario)
   idUsuario: number;

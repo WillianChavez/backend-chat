@@ -20,6 +20,7 @@ import ReaccionMensaje from './reaccion-mensaje.model';
 export default class Mensaje extends Model {
   @AutoIncrement
   @PrimaryKey
+  @Column
   id: number;
 
   @Column

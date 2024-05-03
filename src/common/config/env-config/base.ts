@@ -3,7 +3,7 @@ import { Dialect } from 'sequelize';
 
 export default registerAs('', () => ({
   host: process.env.HOST,
-  port: process.env.PORT,
+  port: process.env.PORT || 3000,
   appEnv: process.env.APP_ENV,
   secretKey: process.env.SECRET_KEY,
   db: {
@@ -13,7 +13,7 @@ export default registerAs('', () => ({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     logger: process.env.DB_LOGGER,
-    database: process.env.DB_NAME,
+    database: process.env.DB_DATABASE,
   },
 
   appDebug: process.env.DB_DIALECT,

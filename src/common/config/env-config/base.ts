@@ -13,7 +13,7 @@ export default registerAs('', () => ({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     logger: process.env.DB_LOGGER,
-    database: process.env.DB_DATABASE,
+    database: process.env.DB_NAME,
   },
 
   appDebug: process.env.DB_DIALECT,

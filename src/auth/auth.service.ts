@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import Usuario from 'src/common/database/models/usuario.model';
 import * as bcrypt from 'bcrypt';
+import { AuthDto } from './dto/auth-dto';
 
 @Injectable()
 export class AuthService {
@@ -10,13 +11,13 @@ export class AuthService {
    * Recibe como parámetros el nombre de usuario y la contraseña
    * Devuelve un booleano que indica si la autenticación fue exitosa o no
    */
-  async auth(user: string, password: string): Promise<boolean> {
+  async auth(auth: AuthDto): Promise<boolean> {
     /*
      * Buscar el usuario en la base de datos
      */
     const usuario = await Usuario.findOne({
       where: {
-        nombre: user,
+        nombre: auth.username,
       }
     });
 
@@ -29,6 +30,6 @@ export class AuthService {
      * Comparar la contraseña ingresada con la contraseña almacenada en la base de datos
      * Si las contraseñas coinciden, la función devolverá true
      */
-    return await bcrypt.compare(password, usuario.contra)
+    return await bcrypt.compare(auth.password, usuario.contra)
   }
 }

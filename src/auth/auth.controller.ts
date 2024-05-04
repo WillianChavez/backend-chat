@@ -7,9 +7,7 @@ import { AuthService } from "./auth.service";
 })
 export class AuthController {
 
-  constructor(private authService: AuthService) {
-    this.authService = authService;
-  }
+  constructor(private authService: AuthService) { }
 
   @Get('/')
   async auth(@Req() request: Request, @Res() response: Response): Promise<any> {

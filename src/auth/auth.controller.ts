@@ -11,7 +11,9 @@ export class AuthController {
   constructor(private authService: AuthService) { }
 
   @Get()
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe({
+    whitelist: true,
+  }))
   async auth(@Body() authUser: AuthDto, @Res() response: Response): Promise<any> {
 
     if (!(await this.authService.auth(authUser))) {

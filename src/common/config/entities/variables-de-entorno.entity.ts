@@ -29,7 +29,7 @@ export class VariablesDeEntorno {
 
   @IsNotEmpty()
   @IsString()
-  DB_DATABASE: string;
+  DB_NAME: string;
 
   @IsNotEmpty()
   @IsString()

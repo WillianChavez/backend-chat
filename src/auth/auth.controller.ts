@@ -1,6 +1,7 @@
-import { Controller, Get, Req, Res } from "@nestjs/common";
+import { Body, Controller, Get, Res, UnauthorizedException, UsePipes, ValidationPipe } from "@nestjs/common";
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
+import { AuthDto } from "./dto/auth-dto";
 
 @Controller({
   path: 'auth',
@@ -9,23 +10,16 @@ export class AuthController {
 
   constructor(private authService: AuthService) { }
 
-  @Get('/')
-  async auth(@Req() request: Request, @Res() response: Response): Promise<any> {
+  @Get()
+  @UsePipes(new ValidationPipe())
+  async auth(@Body() authUser: AuthDto, @Res() response: Response): Promise<any> {
 
-    const { user, password } = request.body;
-
-    if (!user || !password) {
-      return response.status(400).json({
-        message: 'El usuario y la contraseña son requeridos.'
-      });
-    }
-
-    if (!this.authService.auth(user, password)) {
-      return response.status(401).json({
+    if (!(await this.authService.auth(authUser))) {
+      throw new UnauthorizedException({
         message: 'Usuario o contraseña incorrectos.'
       });
     }
 
-    return response.json({ user, password });
+    return response.json({ ...authUser });
   }
 }

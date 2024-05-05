@@ -10,6 +10,7 @@ import Usuario from 'src/common/database/models/usuario.model';
 import Mensaje from 'src/common/database/models/mensaje.model';
 import LecturaMensaje from 'src/common/database/models/lectura-mensaje.model';
 import { Sequelize } from 'sequelize-typescript';
+import { CreateGroupChatDto } from '../dto/group-chat.dto';
 
 @Injectable()
 export class ChatService {
@@ -17,8 +18,12 @@ export class ChatService {
   constructor(
     @InjectModel(Chat)
     private chatModel: typeof Chat,
+
     @InjectModel(UsuarioChat)
     private usuarioChatModel: typeof UsuarioChat,
+
+    @InjectModel(PreferenciaChat)
+    private preferenciaChatModel: typeof PreferenciaChat,
 
     @InjectModel(TipoChat)
     private tipoChatModel: typeof TipoChat,
@@ -122,11 +127,50 @@ export class ChatService {
     }
   }
 
-  update(id: number, updateChatDto: UpdateChatDto) {
-    return `This action updates a #${id} chat`;
-  }
+  async createGroupChat(createGroupChatDto: CreateGroupChatDto) {
+    try {
 
-  remove(id: number) {
-    return `This action removes a #${id} chat`;
+      const { nombre, idsUsuarios } = createGroupChatDto;
+
+      const tipoChatGrupal = await this.tipoChatModel.findOne({
+        where: { nombre: 'Grupal' }
+      });
+
+      if (!tipoChatGrupal) throw new BadRequestException('Tipo de chat grupal no encontrado');
+
+      const newChat = await this.chatModel.create({
+        idTipoChat: tipoChatGrupal.id,
+      });
+
+      const promiseUsuariosChat = idsUsuarios.map(idUsuario => {
+        this.usuarioModel.findByPk(idUsuario).then(usuario => {
+          if (!usuario) throw new BadRequestException('Usuario no encontrado');
+
+          return this.usuarioChatModel.create({
+            idChat: newChat.id,
+            idUsuario,
+          });
+        }).catch(error => {
+          throw error;
+        });
+      });
+
+      await Promise.all(promiseUsuariosChat);
+
+      const promisePreferenciasChat = idsUsuarios.map(idUsuario => {
+        this.preferenciaChatModel.create({
+          idChat: newChat.id,
+          idUsuario,
+          nombre,
+          fondoColor: '#FFFFFF',
+        });
+      });
+
+      await Promise.all(promisePreferenciasChat);
+
+      return newChat;
+    } catch (error) {
+      throw new BadRequestException('Error al crear chat grupal');
+    }
   }
 }

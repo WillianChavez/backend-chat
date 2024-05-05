@@ -1,4 +1,5 @@
-import { AutoIncrement, Column, PrimaryKey, Table, Model } from 'sequelize-typescript';
+import { AutoIncrement, Column, PrimaryKey, Table, Model, HasMany } from 'sequelize-typescript';
+import ArchivoMensaje from './archivo-mensaje.model';
 
 @Table({
   tableName: 'ctl_tipo_archivo',
@@ -11,4 +12,7 @@ export default class TipoArchivo extends Model {
 
   @Column
   nombre: string;
+
+  @HasMany(() => ArchivoMensaje)
+  archivosMensaje: ArchivoMensaje[];
 }

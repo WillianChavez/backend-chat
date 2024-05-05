@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { CommonModule } from './common/common.module';
-import { AuthModule } from './auth/auth.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
-  imports: [CommonModule, AuthModule],
+  imports: [CommonModule, ChatModule],
   controllers: [],
   providers: [],
 })

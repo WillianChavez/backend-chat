@@ -72,4 +72,10 @@ export default class Usuario extends Model {
 
   @HasMany(() => PreferenciaNotificacion)
   preferenciasNotificacion: PreferenciaNotificacion[];
+
+  // hidePassword
+  hidePassword() {
+    const { contra, ...rest } = this.get();
+    return rest;
+  }
 }

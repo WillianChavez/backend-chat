@@ -16,12 +16,15 @@ export class AuthController {
   }))
   async auth(@Body() authUser: AuthDto, @Res() response: Response): Promise<any> {
 
-    if (!(await this.authService.auth(authUser))) {
-      throw new UnauthorizedException({
-        message: 'Usuario o contraseña incorrectos.'
-      });
-    }
+    const usuario = await this.authService.auth(authUser);
 
-    return response.json({ ...authUser });
+    const token = await this.authService.generarToken(usuario);
+
+    const dispositivo = await this.authService.vincularDispositivo(usuario.id, authUser.nombreDispositivo, token);
+
+    return response.json({
+      usuario,
+      dispositivo
+    });
   }
 }

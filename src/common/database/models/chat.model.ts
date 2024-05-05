@@ -27,6 +27,9 @@ export default class Chat extends Model {
   @CreatedAt
   fechaCreacion: Date;
 
+  @Column
+  uriFoto: string;
+
   @ForeignKey(() => TipoChat)
   idTipoChat: number;
 

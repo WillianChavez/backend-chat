@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { ChatService } from './services/chat.service';
 import { TipoChatService } from './services/tipo-chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
-import { UpdateChatDto } from './dto/update-chat.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateGroupChatDto } from './dto/group-chat.dto';
 
 @Controller('chat')
@@ -36,8 +36,15 @@ export class ChatController {
     return this.chatService.create(createChatDto);
   }
 
-  @Post()
-  createGroup(@Body() createGroupChatDto: CreateGroupChatDto) {
+  @Post('/group')
+  @UseInterceptors(
+    FileInterceptor('file'),
+  )
+  createGroup(
+    @Body() createGroupChatDto: CreateGroupChatDto,
+    @UploadedFile() file: Express.Multer.File
+  ) {
+    console.log(file);
     return this.chatService.createGroupChat(createGroupChatDto);
   }
 }

@@ -28,6 +28,9 @@ export default class DispositivoVinculado extends Model {
   @Column
   nombreDispositivo: string;
 
+  @Column
+  token: string;
+
   @CreatedAt
   fecha: Date;
 }

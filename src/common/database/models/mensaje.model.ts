@@ -29,11 +29,6 @@ export default class Mensaje extends Model {
   @CreatedAt
   fechaHora: Date;
 
-  @ForeignKey(() => Chat)
-  idChat: number;
-
-  @BelongsTo(() => Chat)
-  chat: Chat;
 
   @ForeignKey(() => Usuario)
   idUsuario: number;
@@ -46,4 +41,10 @@ export default class Mensaje extends Model {
 
   @HasMany(() => ReaccionMensaje)
   reacciones: ReaccionMensaje[];
+
+  @ForeignKey(() => Chat)
+  idChat: number;
+
+  @BelongsTo(() => Chat)
+  chat: Chat;
 }

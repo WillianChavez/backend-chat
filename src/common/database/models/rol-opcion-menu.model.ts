@@ -7,7 +7,7 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
-import OpcionMenu from './ctl-opcion-menu.model';
+import OpcionMenu from './opcion-menu.model';
 import Rol from './rol.model';
 
 @Table({

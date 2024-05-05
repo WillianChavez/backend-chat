@@ -45,4 +45,16 @@ export class AuthDto {
     message: 'La contraseña es requerida.'
   })
   password: string;
+
+  /**
+   * @description Nombre del dispositivo
+   * @var {string} nombreDispositivo
+   */
+  @IsString({
+    message: 'El nombre del dispositivo debe ser una cadena de texto.'
+  })
+  @IsNotEmpty({
+    message: 'El nombre del dispositivo es requerido.'
+  })
+  nombreDispositivo: string;
 }

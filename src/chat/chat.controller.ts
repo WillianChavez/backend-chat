@@ -1,25 +1,36 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ChatService } from './chat.service';
+import { ChatService } from './services/chat.service';
+import { TipoChatService } from './services/tipo-chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
 
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(
+    private readonly chatService: ChatService,
+    private readonly tipoChatService: TipoChatService
+  ) { }
 
   @Post()
   create(@Body() createChatDto: CreateChatDto) {
     return this.chatService.create(createChatDto);
   }
 
-  @Get()
+  @Get('/')
   findAll() {
     return this.chatService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.chatService.findOne(+id);
+  @Get('/tipos')
+  async listAllTipoChat() {
+    const tipos = await this.tipoChatService.listAll()
+    return tipos;
+
+  }
+
+  @Get('/usuario/:idUsuario')
+  findOne(@Param('id') idUsuario: number) {
+    return this.chatService.findAll(idUsuario);
   }
 
   @Patch(':id')
@@ -31,4 +42,6 @@ export class ChatController {
   remove(@Param('id') id: string) {
     return this.chatService.remove(+id);
   }
+
+
 }

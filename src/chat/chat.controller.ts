@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFile, Put } from '@nestjs/common';
 import { ChatService } from './services/chat.service';
 import { TipoChatService } from './services/tipo-chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateGroupChatDto } from './dto/group-chat.dto';
+import { UpdatePreferenciaChatDto } from './dto/preferencia-chat.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -32,8 +33,14 @@ export class ChatController {
 
 
   @Post()
-  create(@Body() createChatDto: CreateChatDto) {
-    return this.chatService.create(createChatDto);
+  @UseInterceptors(
+    FileInterceptor('file'),
+  )
+  create(
+    @Body() createChatDto: CreateChatDto,
+    @UploadedFile() file: Express.Multer.File
+  ) {
+    return this.chatService.create(createChatDto, file);
   }
 
   @Post('/group')
@@ -47,4 +54,13 @@ export class ChatController {
     console.log(file);
     return this.chatService.createGroupChat(createGroupChatDto);
   }
+
+  @Put('/preferencia/:idPreferenciaChat')
+  updatePreferenciaChat(
+    @Param('idPreferenciaChat') idPreferenciaChat: number,
+    @Body() updatePreferenciaChatDto: UpdatePreferenciaChatDto
+  ) {
+    return this.chatService.updatePreferenciaChat(idPreferenciaChat, updatePreferenciaChatDto);
+  }
+
 }

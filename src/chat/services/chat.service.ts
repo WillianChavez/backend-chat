@@ -11,6 +11,7 @@ import Mensaje from 'src/common/database/models/mensaje.model';
 import LecturaMensaje from 'src/common/database/models/lectura-mensaje.model';
 import { Sequelize } from 'sequelize-typescript';
 import { CreateGroupChatDto } from '../dto/group-chat.dto';
+import { UpdatePreferenciaChatDto } from '../dto/preferencia-chat.dto';
 
 @Injectable()
 export class ChatService {
@@ -35,7 +36,7 @@ export class ChatService {
     private mensajeModel: typeof Mensaje,
   ) { }
 
-  async create(createChatDto: CreateChatDto) {
+  async create(createChatDto: CreateChatDto, file: Express.Multer.File) {
     const { idUsuario, idTipoChat, nombre } = createChatDto;
 
     const usuario = await this.usuarioModel.findByPk(idUsuario);
@@ -46,14 +47,14 @@ export class ChatService {
 
     const newChat = await this.chatModel.create({
       idTipoChat,
+      nombre,
+      uriFoto: file ? file.filename : null,
     });
 
-
-
-
-
-
+    return newChat;
   }
+
+
 
   async findAll(idUsuario?: number) {
     const filterUsuario = {}
@@ -172,5 +173,15 @@ export class ChatService {
     } catch (error) {
       throw new BadRequestException('Error al crear chat grupal');
     }
+  }
+
+  async updatePreferenciaChat(id: number, updatePreferenciaChatDto: UpdatePreferenciaChatDto) {
+    const preferenciaChat = await this.preferenciaChatModel.findByPk(id);
+    if (!preferenciaChat) throw new BadRequestException('Preferencia de chat no encontrada');
+
+    await preferenciaChat.update(updatePreferenciaChatDto);
+    await preferenciaChat.save();
+
+    return preferenciaChat;
   }
 }

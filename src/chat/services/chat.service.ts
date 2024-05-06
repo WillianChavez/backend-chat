@@ -12,6 +12,7 @@ import LecturaMensaje from 'src/common/database/models/lectura-mensaje.model';
 import { Sequelize } from 'sequelize-typescript';
 import { CreateGroupChatDto } from '../dto/group-chat.dto';
 import { UpdatePreferenciaChatDto } from '../dto/preferencia-chat.dto';
+import Reaccion from 'src/common/database/models/reaccion.model';
 
 @Injectable()
 export class ChatService {
@@ -34,6 +35,9 @@ export class ChatService {
 
     @InjectModel(Mensaje)
     private mensajeModel: typeof Mensaje,
+
+    @InjectModel(Reaccion)
+    private reaccionModel: typeof Reaccion,
   ) { }
 
   async create(createChatDto: CreateChatDto, file: Express.Multer.File) {
@@ -183,5 +187,10 @@ export class ChatService {
     await preferenciaChat.save();
 
     return preferenciaChat;
+  }
+
+  async listReacciones() {
+    const reacciones = await this.reaccionModel.findAll();
+    return reacciones;
   }
 }

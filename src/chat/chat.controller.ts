@@ -26,6 +26,13 @@ export class ChatController {
 
   }
 
+  @Get('/reacciones')
+  async listAllReacciones() {
+    const tipos = await this.chatService.listReacciones()
+    return tipos;
+
+  }
+
   @Get('/usuario/:idUsuario')
   findOne(@Param('id') idUsuario: number) {
     return this.chatService.findAll(idUsuario);

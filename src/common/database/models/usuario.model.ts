@@ -34,8 +34,8 @@ export default class Usuario extends Model {
   @Column
   contra: string;
 
-  @HasMany(() => DobleFactorUsuario)
-  dobleFactor: DobleFactorUsuario[];
+  @HasOne(() => DobleFactorUsuario)
+  dobleFactor: DobleFactorUsuario;
 
   @HasOne(() => Perfil)
   perfil: Perfil;

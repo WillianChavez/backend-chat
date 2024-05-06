@@ -1,30 +1,61 @@
-import { Body, Controller, Get, Res, UnauthorizedException, UsePipes, ValidationPipe } from "@nestjs/common";
-import { Request, Response } from "express";
-import { AuthService } from "./auth.service";
+import { Body, Controller, Get, Post, Req, Res, UnauthorizedException, UsePipes, ValidationPipe } from "@nestjs/common";
+import { AuthService } from "./services/auth.service";
 import { AuthDto } from "./dto/auth-dto";
+import { TfaService } from "./services/tfa.service";
+import { TfaVertifyDto } from "./dto/tfa-vertify-dto";
+import { Request } from "./dto/request-auth";
+import { Response } from "express";
+
 
 @Controller({
   path: 'auth',
 })
 export class AuthController {
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private tfaService: TfaService) { }
 
   @Get()
   @UsePipes(new ValidationPipe({
     whitelist: true,
   }))
-  async auth(@Body() authUser: AuthDto, @Res() response: Response): Promise<any> {
+  async auth(@Body() authUser: AuthDto, @Res() response: Response) {
 
     const usuario = await this.authService.auth(authUser);
 
-    const token = await this.authService.generarToken(usuario);
+    const dispositivo = await this.authService.vincularDispositivo(usuario, authUser.nombreDispositivo);
 
-    const dispositivo = await this.authService.vincularDispositivo(usuario.id, authUser.nombreDispositivo, token);
+    if (usuario.tfaRequerido) {
+      await this.tfaService.sendTfaCode(usuario.id, dispositivo.id);
+    }
 
     return response.json({
       usuario,
       dispositivo
     });
   }
+
+  @Post('verify-tfa')
+  @UsePipes(new ValidationPipe({
+    whitelist: true,
+  }))
+  async verifyTfa(@Body() userTfa: TfaVertifyDto, @Req() request: Request, @Res() response: Response): Promise<any> {
+
+    const jwtData = request?.jwtData;
+
+    const isValid = await this.tfaService.verifyTfaCode(jwtData.id, jwtData.idDispositivo, userTfa.codigo);
+
+    if (!isValid) {
+      throw new UnauthorizedException({
+        message: 'El código de verificación es incorrecto.'
+      });
+    }
+
+    const dispositivo = await this.authService.actualizarTokenDispositivo(jwtData.idDispositivo, request.token, isValid);
+
+    return response.json({
+      usuario: { ...jwtData, tfaPasado: isValid },
+      dispositivo
+    });
+  }
+
 }

@@ -19,9 +19,11 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "migration:generate": "ts-node src/common/database/initialize-migrate.ts",
-    "migration:run": "sequelize-cli  db:migrate"
+    "migration:run": "sequelize-cli  db:migrate",
+    "migration:rollback": "sequelize-cli db:migrate:undo"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
@@ -35,6 +37,8 @@
     "class-validator": "^0.14.0",
     "dotenv": "^16.4.5",
     "mysql2": "^3.9.7",
+    "nodemailer": "^6.9.13",
+    "otp-io": "^1.2.6",
     "pg": "^8.10.0",
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.1.13",
@@ -52,6 +56,7 @@
     "@types/jest": "29.5.0",
     "@types/multer": "^1.4.11",
     "@types/node": "18.15.11",
+    "@types/nodemailer": "^6.4.15",
     "@types/sequelize": "^4.28.20",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",

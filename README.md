@@ -47,6 +47,15 @@ Este es el repositorio del backend para una aplicación de chat desarrollada con
    DB_DIALECT=postgres
 
    APP_DEBUG=true
+
+
+   MAIL_HOST=localhsot
+   MAIL_PORT=2525
+   MAIL_USER=user
+   MAIL_PASS=passsword
+   MAIL_SECURE=false
+   MAIL_FROM='Minichat<noreply@minichat.dev>
+
    ```
 
 ## Uso

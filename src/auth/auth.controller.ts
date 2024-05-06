@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, Res, UnauthorizedException, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Post, Req, Res, UnauthorizedException, UsePipes, ValidationPipe } from "@nestjs/common";
 import { AuthService } from "./services/auth.service";
 import { AuthDto } from "./dto/auth-dto";
 import { TfaService } from "./services/tfa.service";
@@ -14,7 +14,7 @@ export class AuthController {
 
   constructor(private authService: AuthService, private tfaService: TfaService) { }
 
-  @Get()
+  @Post()
   @UsePipes(new ValidationPipe({
     whitelist: true,
   }))

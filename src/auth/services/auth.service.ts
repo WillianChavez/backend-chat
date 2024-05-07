@@ -134,4 +134,8 @@ export class AuthService {
     dispositivo.token = nuevoToken;
     return await dispositivo.save();
   }
+
+  async decryptoToken(token: string) {
+    return this.jwtService.decode(token) as UserTfaDto;
+  }
 }

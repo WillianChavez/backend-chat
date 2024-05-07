@@ -50,8 +50,9 @@ export class ChatRealTimeGateway implements OnGatewayConnection, OnGatewayDiscon
       idUsuario: newMessage.idUsuario,
       mensaje: newMessage.mensaje,
     });
+    const room = 'room-' + newMessage.idChat;
 
-    client.broadcast.emit('new-message', message);
+    client.broadcast.to(room).emit('new-message', message);
   }
 
   // Método para manejar las reacciones a los mensajes
@@ -65,7 +66,10 @@ export class ChatRealTimeGateway implements OnGatewayConnection, OnGatewayDiscon
       idReaccion: newReaction.idReaccion,
     });
 
-    client.broadcast.emit('new-reaction', reaccion);
+    const mensaje = await this.mensajeModel.findByPk(newReaction.idMensaje);
+    const room = 'room-' + mensaje.idChat;
+
+    client.broadcast.to(room).emit('new-reaction', reaccion);
   }
 
   // Método para unirse a una sala de chat

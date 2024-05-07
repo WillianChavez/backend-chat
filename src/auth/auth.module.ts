@@ -1,5 +1,4 @@
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
-// import { AuthController } from './auth.controller';
+import { Global, MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './services/auth.service';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -12,6 +11,7 @@ import { MailService } from 'src/common/mail/mail.service';
 import CodigoGeneradoUsuario from 'src/common/database/models/codigo-generado-usuario.model';
 import { AuthGuardMiddleware } from './middleware/auth-guard/auth-guard.middleware';
 
+@Global()
 @Module({
   imports: [SequelizeModule.forFeature([
     Usuario,
@@ -21,6 +21,7 @@ import { AuthGuardMiddleware } from './middleware/auth-guard/auth-guard.middlewa
   ])],
   controllers: [AuthController],
   providers: [AuthService, JwtService, TfaService, MailService],
+  exports: [AuthService, JwtService, TfaService, MailService]
 })
 export class AuthModule {
   configure(consumer: MiddlewareConsumer) {

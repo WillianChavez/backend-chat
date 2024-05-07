@@ -7,6 +7,8 @@ import { InjectModel } from '@nestjs/sequelize';
 import Mensaje from 'src/common/database/models/mensaje.model';
 import { NewReactionMessageDto } from './dto/new-reaction-message.dto';
 import ReaccionMensaje from 'src/common/database/models/reaccion-mensaje.model';
+import { AuthService } from 'src/auth/services/auth.service';
+import UsuarioChat from 'src/common/database/models/usuario-chat.model';
 
 @WebSocketGateway()
 export class ChatRealTimeGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
@@ -20,6 +22,11 @@ export class ChatRealTimeGateway implements OnGatewayConnection, OnGatewayDiscon
 
     @InjectModel(ReaccionMensaje)
     private reaccionMensajeModel: typeof ReaccionMensaje,
+
+    @InjectModel(UsuarioChat)
+    private usuarioChatModel: typeof UsuarioChat,
+
+    private readonly authService: AuthService,
   ) { }
 
   afterInit() {
@@ -63,9 +70,23 @@ export class ChatRealTimeGateway implements OnGatewayConnection, OnGatewayDiscon
 
   // Método para unirse a una sala de chat
   @SubscribeMessage('join-room')
-  joinRoom(@MessageBody() room: string, @ConnectedSocket() client: Socket) {
-    client.join(room);
-    client.emit('joined-room', room);
+  async joinRoom(@ConnectedSocket() client: Socket) {
+    const token = client.handshake.headers.authorization || client.handshake.auth.token;
+    if (token) {
+      const user = await this.authService.decryptoToken(token);
+      const usuarioChats = await this.usuarioChatModel.findAll({
+        where: {
+          idUsuario: user.id,
+        }
+      });
+
+      usuarioChats.forEach(usuarioChat => {
+        client.join('room-' + usuarioChat.idChat);
+      });
+
+    }
+
+    client.emit('joined-room');
   }
 
 

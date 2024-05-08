@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { UsuarioService } from './usuario.service';
+import { UsuarioService } from './services/usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 
 @Controller('usuario')
@@ -7,7 +7,7 @@ export class UsuarioController {
   constructor(private usuarioService: UsuarioService) { }
 
   @Post()
-  async create(@Body() usuario: CreateUsuarioDto) {
-    return await this.usuarioService.create(usuario);
+  async create(@Body() usuarioDto: CreateUsuarioDto) {
+    return await this.usuarioService.create(usuarioDto);
   }
 }

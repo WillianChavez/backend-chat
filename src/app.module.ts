@@ -5,7 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsuarioModule } from './usuario/usuario.module';
 
 @Module({
-  imports: [CommonModule, ChatModule, AuthModule],
+  imports: [CommonModule, ChatModule, AuthModule, UsuarioModule],
   controllers: [],
   providers: [],
 })

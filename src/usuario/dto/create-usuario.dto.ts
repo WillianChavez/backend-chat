@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
 
 export class CreateUsuarioDto {
   @IsString({
@@ -19,4 +19,23 @@ export class CreateUsuarioDto {
     message: 'La contraseña debe tener al menos 6 caracteres'
   })
   contra: string;
+
+  @IsString({
+    message: 'El correo debe ser un texto'
+  })
+  @IsEmail({}, {
+    message: 'El correo no es válido'
+  })
+  @IsNotEmpty({
+    message: 'El correo es requerido'
+  })
+  correo: string;
+
+  @IsString({
+    message: 'El nombre de usuario debe ser un texto'
+  })
+  @IsNotEmpty({
+    message: 'El nombre de usuario es requerido'
+  })
+  nombre_usuario: string;
 }

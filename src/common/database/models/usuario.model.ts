@@ -34,8 +34,8 @@ export default class Usuario extends Model {
   @Column
   contra: string;
 
-  @HasMany(() => DobleFactorUsuario)
-  dobleFactor: DobleFactorUsuario[];
+  @HasOne(() => DobleFactorUsuario)
+  dobleFactor: DobleFactorUsuario;
 
   @HasOne(() => Perfil)
   perfil: Perfil;
@@ -72,4 +72,10 @@ export default class Usuario extends Model {
 
   @HasMany(() => PreferenciaNotificacion)
   preferenciasNotificacion: PreferenciaNotificacion[];
+
+  // hidePassword
+  hidePassword() {
+    const { contra, ...rest } = this.get();
+    return rest;
+  }
 }

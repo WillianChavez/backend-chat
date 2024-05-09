@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer'
+import { StorageService } from './services/storage.services';
 
 @Global()
 @Module({
@@ -17,6 +18,7 @@ import { diskStorage } from 'multer'
       }),
     }),
   ],
-  exports: [MulterModule]
+  providers: [StorageService],
+  exports: [StorageService]
 })
 export class StorageModule { }

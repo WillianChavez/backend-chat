@@ -18,6 +18,9 @@ export default class ContactoUsuario extends Model {
   @Column
   id: number;
 
+  @Column
+  aceptado: boolean;
+
   @ForeignKey(() => Usuario)
   idContacto: number;
 

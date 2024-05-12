@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, IsStrongPassword } from "class-validator";
 
 export class CreateUsuarioDto {
   @IsString({
@@ -15,7 +15,13 @@ export class CreateUsuarioDto {
   @IsNotEmpty({
     message: 'La contraseña es requerida'
   })
-  @MinLength(6, {
+  @IsStrongPassword({
+    minLength: 6,
+    minNumbers: 0,
+    minSymbols: 0,
+    minUppercase: 0,
+    minLowercase: 0
+  }, {
     message: 'La contraseña debe tener al menos 6 caracteres'
   })
   contra: string;

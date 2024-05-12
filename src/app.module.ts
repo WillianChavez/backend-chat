@@ -6,7 +6,13 @@ import { ContactsModule } from './contacts/contacts.module';
 import { UsuarioModule } from './usuario/usuario.module';
 
 @Module({
-  imports: [CommonModule, ChatModule, AuthModule, ContactsModule],
+  imports: [
+    CommonModule,
+    ChatModule,
+    AuthModule,
+    ContactsModule,
+    UsuarioModule
+  ],
   controllers: [],
   providers: [],
 })

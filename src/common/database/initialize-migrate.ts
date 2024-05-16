@@ -14,8 +14,10 @@ const initializeMigrate = async () => {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
+    port: process.env.DB_PORT as unknown as number,
     dialect: process.env.DB_DIALECT as Dialect,
-    models: [path.join(__dirname + '/models/*.model.{ts,js}')],
+    modelPaths: [path.join(__dirname + '/models/*.model.{ts,js}')],
+    logging: false,
   });
 
   await SequelizeTypescriptMigration.makeMigration(sequelize, {

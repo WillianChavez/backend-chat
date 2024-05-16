@@ -12,8 +12,8 @@ const Sequelize = require('sequelize');
  * createTable "ctl_tipo_archivo", deps: []
  * createTable "ctl_tipo_chat", deps: []
  * createTable "mnt_usuario", deps: []
- * createTable "mnt_mensaje", deps: [mnt_chat, mnt_usuario]
  * createTable "mnt_chat", deps: [ctl_tipo_chat]
+ * createTable "mnt_mensaje", deps: [mnt_chat, mnt_usuario]
  * createTable "mnt_doble_factor_usuario", deps: [mnt_usuario]
  * createTable "mnt_contacto_bloqueado", deps: [mnt_usuario, mnt_usuario]
  * createTable "mnt_contacto_usuario", deps: [mnt_usuario, mnt_usuario]
@@ -281,6 +281,42 @@ const migrationCommands = [
     {
         fn: "createTable",
         params: [
+            "mnt_chat",
+            {
+                "id": {
+                    "autoIncrement": true,
+                    "primaryKey": true,
+                    "type": Sequelize.INTEGER
+                },
+                "descripcion": {
+                    "type": Sequelize.STRING
+                },
+                "fechaCreacion": {
+                    "allowNull": false,
+                    "type": Sequelize.DATE
+                },
+                "updatedAt": {
+                    "allowNull": false,
+                    "type": Sequelize.DATE
+                },
+                "idTipoChat": {
+                    "onDelete": "SET NULL",
+                    "onUpdate": "CASCADE",
+                    "references": {
+                        "model": "ctl_tipo_chat",
+                        "key": "id"
+                    },
+                    "allowNull": true,
+                    "type": Sequelize.INTEGER
+                }
+            },
+            {}
+        ]
+    },
+    
+    {
+        fn: "createTable",
+        params: [
             "mnt_mensaje",
             {
                 "id": {
@@ -314,42 +350,6 @@ const migrationCommands = [
                     "onUpdate": "CASCADE",
                     "references": {
                         "model": "mnt_usuario",
-                        "key": "id"
-                    },
-                    "allowNull": true,
-                    "type": Sequelize.INTEGER
-                }
-            },
-            {}
-        ]
-    },
-
-    {
-        fn: "createTable",
-        params: [
-            "mnt_chat",
-            {
-                "id": {
-                    "autoIncrement": true,
-                    "primaryKey": true,
-                    "type": Sequelize.INTEGER
-                },
-                "descripcion": {
-                    "type": Sequelize.STRING
-                },
-                "fechaCreacion": {
-                    "allowNull": false,
-                    "type": Sequelize.DATE
-                },
-                "updatedAt": {
-                    "allowNull": false,
-                    "type": Sequelize.DATE
-                },
-                "idTipoChat": {
-                    "onDelete": "SET NULL",
-                    "onUpdate": "CASCADE",
-                    "references": {
-                        "model": "ctl_tipo_chat",
                         "key": "id"
                     },
                     "allowNull": true,

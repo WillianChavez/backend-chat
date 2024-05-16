@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { hmac } from "otp-io/crypto-node";
-import { importKey, TOTP } from 'otp-io';
+import { hmac, randomBytes, } from "otp-io/crypto-node";
+import { exportKey, importKey, TOTP, generateKey } from 'otp-io';
 import DispositivoVinculado from 'src/common/database/models/dispositivo-vinculado.model';
 import DobleFactorUsuario from 'src/common/database/models/doble-factor-usuario.model';
 import Usuario from 'src/common/database/models/usuario.model';
@@ -125,5 +125,27 @@ export class TfaService {
     if (isValid) codigoGenerado.destroy()
 
     return isValid;
+  }
+
+  /**
+   * Create a new secret for the user
+   */
+  async createTfaSecret(idUsuario: number) {
+    let dobleFactor = await this.dobleFactorUsuarioModel.findOne({
+      where: {
+        idUsuario,
+      },
+    });
+
+    if (!dobleFactor) {
+      dobleFactor = await this.dobleFactorUsuarioModel.create({
+        idUsuario,
+      });
+    }
+
+    const secret = exportKey(generateKey(randomBytes, 20));
+    dobleFactor.secret = secret;
+    await dobleFactor.save();
+    return dobleFactor;
   }
 }

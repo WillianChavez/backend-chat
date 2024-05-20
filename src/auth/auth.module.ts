@@ -20,8 +20,8 @@ import { AuthGuardMiddleware } from './middleware/auth-guard/auth-guard.middlewa
     CodigoGeneradoUsuario
   ])],
   controllers: [AuthController],
-  providers: [AuthService, JwtService, TfaService, MailService],
-  exports: [AuthService, JwtService, TfaService, MailService]
+  providers: [AuthService, JwtService, TfaService, MailService, AuthGuardMiddleware],
+  exports: [AuthService, JwtService, TfaService, MailService, AuthGuardMiddleware]
 })
 export class AuthModule {
   configure(consumer: MiddlewareConsumer) {

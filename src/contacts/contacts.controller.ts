@@ -1,33 +1,45 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { ContactsService } from './services/contacts.service';
 import { FriendRequestDto } from './dto/friend-request.dto';
+import { UsuarioService } from 'src/usuario/services/usuario.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('contacts')
 @Controller('contacts')
 export class ContactsController {
-  constructor(private readonly contactsService: ContactsService) { }
+  constructor(private readonly contactsService: ContactsService, private readonly usuarioServices: UsuarioService) { }
 
   @Get('list-friend-requests/:idUsuario')
-  listFriendRequests(@Param('idUsuario') idUsuario: string) {
+  async listFriendRequests(@Param('idUsuario') idUsuario: number) {
+    await this.usuarioServices.exist(idUsuario);
     return this.contactsService.listFriendRequests(Number(idUsuario));
   }
 
   @Post('accept-friend-request')
-  acceptFriendRequest(@Body() friendRequest: FriendRequestDto) {
-    {
-      const { idUsuario, idContacto } = friendRequest;
-      return this.contactsService.acceptFriendRequest(idUsuario, idContacto);
-    }
+  async acceptFriendRequest(@Body() friendRequest: FriendRequestDto) {
+    const { idUsuario, idContacto } = friendRequest;
+    await this.usuarioServices.exist(idContacto);
+    await this.usuarioServices.exist(idUsuario);
+
+    return this.contactsService.acceptFriendRequest(idUsuario, idContacto);
   }
 
   @Post('send-friend-request')
-  sendFriendRequest(@Body() friendRequest: FriendRequestDto) {
+  async sendFriendRequest(@Body() friendRequest: FriendRequestDto) {
     const { idUsuario, idContacto } = friendRequest;
-    return this.contactsService.sendFriendRequest(idUsuario, idContacto);
+    await this.usuarioServices.exist(idContacto);
+    await this.usuarioServices.exist(idUsuario);
+
+    return await this.contactsService.sendFriendRequest(idUsuario, idContacto);
   }
 
   @Post('block-contact')
-  blockContact(@Body() friendRequest: FriendRequestDto) {
+  async blockContact(@Body() friendRequest: FriendRequestDto) {
     const { idUsuario, idContacto } = friendRequest;
+    await this.usuarioServices.exist(idContacto);
+    await this.usuarioServices.exist(idUsuario);
+
     return this.contactsService.blockContact(idUsuario, idContacto);
   }
 

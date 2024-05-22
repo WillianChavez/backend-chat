@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUsuarioDto } from '../dto/create-usuario.dto';
 import Usuario from 'src/common/database/models/usuario.model';
 import Perfil from 'src/common/database/models/perfil.model';
@@ -60,6 +60,13 @@ export class UsuarioService {
         exclude: ['contra']
       }
     });
+  }
+
+  async exist(id: number) {
+    const usuario = await this.usuarioModel.findByPk(id);
+    const exist = !!usuario;
+    if (!exist) throw new NotFoundException(`El usuario con el id ${id} no existe`);
+    return usuario;
   }
 
   async index() {

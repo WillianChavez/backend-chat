@@ -5,7 +5,10 @@ import { CreateChatDto } from './dto/create-chat.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateGroupChatDto } from './dto/group-chat.dto';
 import { UpdatePreferenciaChatDto } from './dto/preferencia-chat.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('chat')
 @Controller('chat')
 export class ChatController {
   constructor(

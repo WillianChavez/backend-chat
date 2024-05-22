@@ -10,7 +10,8 @@ import { AuthTfaGuardMiddleware } from 'src/auth/middleware/tfa-guard/auth-tfa-g
 @Module({
   imports: [SequelizeModule.forFeature([Usuario, Perfil])],
   controllers: [UsuarioController],
-  providers: [UsuarioService]
+  providers: [UsuarioService],
+  exports: [UsuarioService],
 })
 export class UsuarioModule {
   configure(consumer: MiddlewareConsumer) {

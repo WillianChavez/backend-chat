@@ -1,6 +1,8 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail, IsNotEmpty, IsString, IsStrongPassword } from "class-validator";
 
 export class CreateUsuarioDto {
+  @ApiProperty()
   @IsString({
     message: 'El nombre debe ser un texto'
   })
@@ -9,6 +11,7 @@ export class CreateUsuarioDto {
   })
   nombre: string;
 
+  @ApiProperty()
   @IsString({
     message: 'La contraseña debe ser un texto'
   })
@@ -26,6 +29,7 @@ export class CreateUsuarioDto {
   })
   contra: string;
 
+  @ApiProperty()
   @IsString({
     message: 'El correo debe ser un texto'
   })
@@ -37,6 +41,7 @@ export class CreateUsuarioDto {
   })
   correo: string;
 
+  @ApiProperty()
   @IsString({
     message: 'El nombre de usuario debe ser un texto'
   })

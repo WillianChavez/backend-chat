@@ -1,6 +1,8 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString, IsStrongPassword } from "class-validator";
 
 export class UpdatePasswordDto {
+  @ApiProperty()
   @IsStrongPassword({
     minLength: 6,
     minNumbers: 0,
@@ -15,6 +17,7 @@ export class UpdatePasswordDto {
   })
   contra_nueva: string;
 
+  @ApiProperty()
   @IsString({
     message: 'La contraseña actual debe ser un texto'
   })
@@ -23,6 +26,7 @@ export class UpdatePasswordDto {
   })
   contra_actual: string;
 
+  @ApiProperty()
   @IsString({
     message: 'La confirmación de la contraseña debe ser un texto'
   })

@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString } from "class-validator";
 /**
  * @module auth/dto/AuthDto
@@ -21,6 +22,7 @@ export class AuthDto {
    * @description Nombre de usuario
    * @var {string} username
    */
+  @ApiProperty()
   @IsString({
     message: 'El nombre de usuario debe ser una cadena de texto.'
   })
@@ -38,6 +40,7 @@ export class AuthDto {
    * @description Contraseña del usuario
    * @var {string} password
    */
+  @ApiProperty()
   @IsString({
     message: 'La contraseña debe ser una cadena de texto.'
   })
@@ -50,6 +53,7 @@ export class AuthDto {
    * @description Nombre del dispositivo
    * @var {string} nombreDispositivo
    */
+  @ApiProperty()
   @IsString({
     message: 'El nombre del dispositivo debe ser una cadena de texto.'
   })

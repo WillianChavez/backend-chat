@@ -5,8 +5,11 @@ import { TfaService } from "./services/tfa.service";
 import { TfaVertifyDto } from "./dto/tfa-vertify-dto";
 import { Request } from "./dto/request-auth";
 import { Response } from "express";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 
+@ApiBearerAuth()
+@ApiTags('auth')
 @Controller({
   path: 'auth',
 })

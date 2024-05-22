@@ -5,7 +5,10 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { AuthTfaGuardMiddleware } from 'src/auth/middleware/tfa-guard/auth-tfa-guard.middleware';
 import { AuthGuardMiddleware } from 'src/auth/middleware/auth-guard/auth-guard.middleware';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('usuario')
 @Controller('usuario')
 export class UsuarioController {
   constructor(private usuarioService: UsuarioService) { }

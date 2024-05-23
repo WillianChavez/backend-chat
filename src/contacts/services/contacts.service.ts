@@ -105,7 +105,6 @@ export class ContactsService {
         exclude: ['contra','createdAt','updatedAt'],
 
       },
-      
       where: {
         id: {
           [Op.not]: idUsuario,

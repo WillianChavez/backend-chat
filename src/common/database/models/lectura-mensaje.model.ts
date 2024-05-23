@@ -13,6 +13,7 @@ import Usuario from './usuario.model';
 
 @Table({
   tableName: 'mnt_lectura_mensaje',
+  underscored: true,
 })
 export default class LecturaMensaje extends Model {
   @PrimaryKey

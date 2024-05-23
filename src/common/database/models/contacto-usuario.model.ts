@@ -11,6 +11,7 @@ import Usuario from './usuario.model';
 
 @Table({
   tableName: 'mnt_contacto_usuario',
+  underscored: true,
 })
 export default class ContactoUsuario extends Model {
   @PrimaryKey

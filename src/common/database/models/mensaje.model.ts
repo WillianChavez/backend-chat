@@ -16,6 +16,7 @@ import ReaccionMensaje from './reaccion-mensaje.model';
 
 @Table({
   tableName: 'mnt_mensaje',
+  underscored: true,
 })
 export default class Mensaje extends Model {
   @AutoIncrement

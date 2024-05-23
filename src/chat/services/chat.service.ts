@@ -68,9 +68,9 @@ export class ChatService {
     // sql para obtener la cantidad de mensajes no leidos de un chat
     const sqlMensajesNoLeidos = `
     (SELECT COUNT(*)
-    FROM mnt_mensaje m
-    JOIN mnt_lectura_mensaje lm ON m.id = lm.idMensaje
-    WHERE m.idChat = mnt_chat.id AND lm.leido = false
+    FROM mnt_mensaje as m
+    JOIN mnt_lectura_mensaje as lm ON m.id = lm.id_mensaje
+    WHERE m.id_chat = "Chat".id AND lm.leido = false
     )`;
 
     const chats = await this.chatModel.findAll({

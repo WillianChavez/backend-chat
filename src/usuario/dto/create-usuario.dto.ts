@@ -49,4 +49,13 @@ export class CreateUsuarioDto {
     message: 'El nombre de usuario es requerido'
   })
   nombre_usuario: string;
+
+  @ApiProperty()
+  @IsString({
+    message: 'El nombre del dispositivo debe ser un texto'
+  })
+  @IsNotEmpty({
+    message: 'El nombre del dispositivo es requerido'
+  })
+  nombreDispositivo: string;
 }

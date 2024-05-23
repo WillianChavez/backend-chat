@@ -4,6 +4,8 @@ import Usuario from 'src/common/database/models/usuario.model';
 import ContactoBloqueado from 'src/common/database/models/contacto-bloqueado.model';
 import ContactoUsuario from 'src/common/database/models/contacto-usuario.model';
 import Perfil from 'src/common/database/models/perfil.model';
+import { Sequelize } from 'sequelize-typescript';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class ContactsService {
@@ -19,6 +21,7 @@ export class ContactsService {
 
   async listFriendRequests(idUsuario: number) {
     return await this.contactoUsuarioModel.findAll({
+      attributes: ['id', 'aceptado'],
       where: {
         idContacto: idUsuario,
         aceptado: false,
@@ -26,7 +29,7 @@ export class ContactsService {
       include: [
         {
           model: Usuario,
-          attributes: ['id', 'nombreUsuario'],
+          attributes: ['id', 'nombre'],
           as: 'usuario',
           include: [{
             model: Perfil,
@@ -89,5 +92,33 @@ export class ContactsService {
       idUsuario,
       idUsuarioBloqueado: idContacto,
     });
+  }
+
+  async listAllContactsForUser(idUsuario: number) {
+
+    const sqlContactoAceptado = `EXISTS(SELECT id FROM mnt_contacto_usuario as c WHERE c.id_usuario = ${idUsuario} AND c.id_contacto = "Usuario".id)`;
+    const usuarios = await this.usuarioModel.findAll({
+      attributes: {
+        include: ['id', 'nombre',
+          [Sequelize.literal(sqlContactoAceptado), 'contacto_aceptado']
+        ],
+        exclude: ['contra','createdAt','updatedAt'],
+
+      },
+      
+      where: {
+        id: {
+          [Op.not]: idUsuario,
+        },
+      },
+      include: [
+        {
+          model: Perfil,
+          attributes: ['nombre', 'foto'],
+        },
+      ],
+    });
+
+    return usuarios;
   }
 }

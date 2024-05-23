@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "migration:generate": "ts-node src/common/database/initialize-migrate.ts",
     "migration:run": "sequelize-cli  db:migrate",
-    "migration:rollback": "sequelize-cli db:migrate:undo"
+    "migration:rollback": "sequelize-cli db:migrate:undo",
+    "seed:all": "sequelize-cli db:seed:all"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "2.0.2",

@@ -2,7 +2,6 @@ import {
   AutoIncrement,
   BelongsTo,
   Column,
-  Default,
   ForeignKey,
   Model,
   PrimaryKey,
@@ -33,7 +32,8 @@ export default class PreferenciaUsuario extends Model {
   @BelongsTo(() => FuenteTipografica)
   fuente: FuenteTipografica;
 
-  @Column
-  @Default(false)
+  @Column({
+    defaultValue: false,
+  })
   temaOscuro: boolean;
 }

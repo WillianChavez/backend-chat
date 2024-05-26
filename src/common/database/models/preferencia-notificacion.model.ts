@@ -2,7 +2,6 @@ import {
   AutoIncrement,
   BelongsTo,
   Column,
-  Default,
   ForeignKey,
   Model,
   PrimaryKey,
@@ -20,12 +19,14 @@ export default class PreferenciaNotificacion extends Model {
   @Column
   id: number;
 
-  @Column
-  @Default(false)
+  @Column({
+    defaultValue: false,
+  })
   silenciadas: boolean;
 
-  @Column
-  @Default(false)
+  @Column({
+    defaultValue: false,
+  })
   activoHorarioNotificacion: boolean;
 
   @Column

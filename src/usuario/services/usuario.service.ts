@@ -7,6 +7,8 @@ import { InjectModel } from '@nestjs/sequelize';
 import { UpdateUsuarioDto } from '../dto/update-usuario.dto';
 import { Op } from 'sequelize';
 import { UpdatePasswordDto } from '../dto/update-password.dto';
+import { UpdateUsuarioPreferenciasDto } from '../dto/update-usuario-preferencias.dto';
+import PreferenciaUsuario from 'src/common/database/models/preferencia-usuario.model';
 
 @Injectable()
 export class UsuarioService {
@@ -15,7 +17,12 @@ export class UsuarioService {
     @InjectModel(Usuario)
     private usuarioModel: typeof Usuario,
     @InjectModel(Perfil)
-    private perfilModel: typeof Perfil
+    private perfilModel: typeof Perfil,
+
+    @InjectModel(PreferenciaUsuario)
+    private preferenciaUsuarioModel: typeof PreferenciaUsuario
+
+
   ) { }
 
 
@@ -136,5 +143,25 @@ export class UsuarioService {
     await usuario.destroy();
 
     return usuario;
+  }
+
+  async updatePreferencias(idUsuario: number, updateUsuarioPreferenciasDto: UpdateUsuarioPreferenciasDto) {
+
+    const { idFuente, temaOscuro } = updateUsuarioPreferenciasDto;
+    const usuario = await this.exist(idUsuario);
+
+
+    const preferencias = await this.preferenciaUsuarioModel.update({
+      tema_oscuro: temaOscuro,
+      id_fuente: idFuente
+    }, {
+      where: {
+        id_usuario: idUsuario
+      }
+    });
+
+
+
+    return preferencias;
   }
 }

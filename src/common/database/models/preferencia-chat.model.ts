@@ -2,6 +2,7 @@ import {
   AutoIncrement,
   BelongsTo,
   Column,
+  Default,
   ForeignKey,
   Model,
   PrimaryKey,
@@ -11,7 +12,7 @@ import Chat from './chat.model';
 import Usuario from './usuario.model';
 
 @Table({
-  underscored: true,  tableName: 'mnt_preferencia_chat',
+  underscored: true, tableName: 'mnt_preferencia_chat',
 })
 export default class PreferenciaChat extends Model {
   @PrimaryKey
@@ -22,6 +23,7 @@ export default class PreferenciaChat extends Model {
   @Column
   nombre: string;
 
+  @Default('FFFFFF')
   @Column
   fondoColor: string;
 

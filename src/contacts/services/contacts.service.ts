@@ -17,6 +17,8 @@ export class ContactsService {
     private contactoBloqueadoModel: typeof ContactoBloqueado,
     @InjectModel(Usuario)
     private usuarioModel: typeof Usuario,
+
+    private sequelize: Sequelize,
   ) { }
 
   async listFriendRequests(idUsuario: number) {
@@ -100,9 +102,9 @@ export class ContactsService {
     const usuarios = await this.usuarioModel.findAll({
       attributes: {
         include: ['id', 'nombre',
-          [Sequelize.literal(sqlContactoAceptado), 'contacto_aceptado']
+          [this.sequelize.literal(sqlContactoAceptado), 'contacto_aceptado']
         ],
-        exclude: ['contra','createdAt','updatedAt'],
+        exclude: ['contra', 'createdAt', 'updatedAt'],
 
       },
       where: {

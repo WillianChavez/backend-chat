@@ -33,11 +33,10 @@ export class ChatService {
     @InjectModel(Usuario)
     private usuarioModel: typeof Usuario,
 
-    @InjectModel(Mensaje)
-    private mensajeModel: typeof Mensaje,
-
     @InjectModel(Reaccion)
     private reaccionModel: typeof Reaccion,
+
+    private sequelize: Sequelize,
   ) { }
 
   async create(createChatDto: CreateChatDto, file: Express.Multer.File) {
@@ -74,7 +73,7 @@ export class ChatService {
     )`;
 
     const chats = await this.chatModel.findAll({
-      attributes: [[Sequelize.literal(sqlMensajesNoLeidos), 'mensajesNoLeidos']],
+      attributes: [[this.sequelize.literal(sqlMensajesNoLeidos), 'mensajesNoLeidos']],
       include: [
         {
           model: UsuarioChat,

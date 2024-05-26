@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { hmac, randomBytes, } from "otp-io/crypto-node";
+import { hmac, randomBytes } from 'otp-io/crypto-node';
 import { exportKey, importKey, TOTP, generateKey } from 'otp-io';
 import DispositivoVinculado from 'src/common/database/models/dispositivo-vinculado.model';
 import DobleFactorUsuario from 'src/common/database/models/doble-factor-usuario.model';
@@ -11,7 +11,6 @@ import CodigoGeneradoUsuario from 'src/common/database/models/codigo-generado-us
 
 @Injectable()
 export class TfaService {
-
   constructor(
     @InjectModel(Usuario)
     private usuarioModel: typeof Usuario,
@@ -19,12 +18,10 @@ export class TfaService {
     private dobleFactorUsuarioModel: typeof DobleFactorUsuario,
     @InjectModel(CodigoGeneradoUsuario)
     private codigoGeneradoUsuarioModel: typeof CodigoGeneradoUsuario,
-    private mailService: MailService,
-  ) {
-  }
+    private mailService: MailService
+  ) {}
 
   totp(secret: string) {
-
     const secretKey = importKey(secret);
 
     return new TOTP(hmac, {
@@ -60,9 +57,10 @@ export class TfaService {
         },
         {
           model: DobleFactorUsuario,
-        }, {
+        },
+        {
           model: Perfil,
-        }
+        },
       ],
     });
 
@@ -81,10 +79,14 @@ export class TfaService {
         codigo: code,
         fechaExpiracion: new Date(Date.now() + 60 * 60 * 4 * 1000), // Date.now() + 4horas
         idDobleFactorUsuario: usuario.dobleFactor.id,
-      })
+      });
     }
 
-    this.mailService.sendTextMail(usuario.perfil.correo, 'Código de verificación', `Su código de verificación es: ${code}`);
+    this.mailService.sendTextMail(
+      usuario.perfil.correo,
+      'Código de verificación',
+      `Su código de verificación es: ${code}`
+    );
   }
 
   /**
@@ -101,12 +103,12 @@ export class TfaService {
         },
         {
           model: DobleFactorUsuario,
-        }, {
+        },
+        {
           model: Perfil,
-        }
+        },
       ],
     });
-
 
     const codigoGenerado = await this.codigoGeneradoUsuarioModel.findOne({
       where: {
@@ -115,14 +117,14 @@ export class TfaService {
       },
     });
 
-    if (!codigoGenerado) throw new UnauthorizedException({
-      message: 'Código de verificación incorrecto.'
-    });
-
+    if (!codigoGenerado)
+      throw new UnauthorizedException({
+        message: 'Código de verificación incorrecto.',
+      });
 
     const isValid = await this.totp(usuario.dobleFactor.secret).checkCode(codigo);
 
-    if (isValid) codigoGenerado.destroy()
+    if (isValid) codigoGenerado.destroy();
 
     return isValid;
   }
@@ -147,5 +149,17 @@ export class TfaService {
     dobleFactor.secret = secret;
     await dobleFactor.save();
     return dobleFactor;
+  }
+
+  async disableTfa(idUsuario: number) {
+    const dobleFactor = await this.dobleFactorUsuarioModel.findOne({
+      where: {
+        idUsuario,
+      },
+    });
+
+    if (dobleFactor) {
+      await dobleFactor.destroy();
+    }
   }
 }

@@ -2,6 +2,7 @@ import {
   AutoIncrement,
   BelongsTo,
   Column,
+  Default,
   ForeignKey,
   Model,
   PrimaryKey,
@@ -11,7 +12,8 @@ import Usuario from './usuario.model';
 import FuenteTipografica from './fuente-tipografica.model';
 
 @Table({
-  underscored: true,  tableName: 'mnt_preferencias_usuario',
+  underscored: true,
+  tableName: 'mnt_preferencias_usuario',
 })
 export default class PreferenciaUsuario extends Model {
   @PrimaryKey
@@ -32,5 +34,6 @@ export default class PreferenciaUsuario extends Model {
   fuente: FuenteTipografica;
 
   @Column
+  @Default(false)
   temaOscuro: boolean;
 }

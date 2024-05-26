@@ -6,6 +6,7 @@ import {
   AutoIncrement,
   HasMany,
   HasOne,
+  AfterCreate,
 } from 'sequelize-typescript';
 import PreferenciaChat from './preferencia-chat.model';
 import UsuarioChat from './usuario-chat.model';
@@ -20,7 +21,8 @@ import PreferenciaUsuario from './preferencia-usuario.model';
 import PreferenciaNotificacion from './preferencia-notificacion.model';
 
 @Table({
-  underscored: true,  tableName: 'mnt_usuario',
+  underscored: true,
+  tableName: 'mnt_usuario',
 })
 export default class Usuario extends Model {
   @PrimaryKey
@@ -77,5 +79,13 @@ export default class Usuario extends Model {
   hidePassword() {
     const { contra, ...rest } = this.get();
     return rest;
+  }
+
+  @AfterCreate
+  static async afterCreateUsuario(instance: Usuario) {
+    await PreferenciaUsuario.create({
+      id_usuario: instance.id,
+      id_fuente: 1,
+    });
   }
 }

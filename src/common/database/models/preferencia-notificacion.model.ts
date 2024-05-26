@@ -2,6 +2,7 @@ import {
   AutoIncrement,
   BelongsTo,
   Column,
+  Default,
   ForeignKey,
   Model,
   PrimaryKey,
@@ -10,7 +11,8 @@ import {
 import Usuario from './usuario.model';
 
 @Table({
-  underscored: true,  tableName: 'mnt_preferencia_notificacion',
+  underscored: true,
+  tableName: 'mnt_preferencia_notificacion',
 })
 export default class PreferenciaNotificacion extends Model {
   @PrimaryKey
@@ -19,9 +21,11 @@ export default class PreferenciaNotificacion extends Model {
   id: number;
 
   @Column
+  @Default(false)
   silenciadas: boolean;
 
   @Column
+  @Default(false)
   activoHorarioNotificacion: boolean;
 
   @Column
@@ -29,9 +33,6 @@ export default class PreferenciaNotificacion extends Model {
 
   @Column
   horaFin: Date;
-
-  @Column
-  fondoColor: string;
 
   @ForeignKey(() => Usuario)
   idUsuario: number;

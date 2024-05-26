@@ -11,13 +11,13 @@ export class ContactsController {
   constructor(private readonly contactsService: ContactsService, private readonly usuarioServices: UsuarioService) { }
 
   @Get('list-friend-requests/:idUsuario')
-  async listFriendRequests(@Param('idUsuario') idUsuario: number) {
+  async listFriendRequests(@Param('id_usuario') idUsuario: number) {
     await this.usuarioServices.exist(idUsuario);
     return this.contactsService.listFriendRequests(idUsuario);
   }
 
   @Get('find-contacts/:idUsuario')
-  async findContacts(@Param('idUsuario') idUsuario: number) {
+  async findContacts(@Param('id_usuario') idUsuario: number) {
     await this.usuarioServices.exist(idUsuario);
     return this.contactsService.listAllContactsForUser(idUsuario);
   }

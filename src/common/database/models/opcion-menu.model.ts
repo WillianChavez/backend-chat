@@ -2,7 +2,7 @@ import { AutoIncrement, Column, HasMany, Model, PrimaryKey, Table } from 'sequel
 import RolOpcionMenu from './rol-opcion-menu.model';
 
 @Table({
-  tableName: 'ctl_opcion_menu',
+  underscored: true,  tableName: 'ctl_opcion_menu',
 })
 export default class OpcionMenu extends Model {
   @PrimaryKey

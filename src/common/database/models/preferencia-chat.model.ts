@@ -11,7 +11,7 @@ import Chat from './chat.model';
 import Usuario from './usuario.model';
 
 @Table({
-  tableName: 'mnt_preferencia_chat',
+  underscored: true,  tableName: 'mnt_preferencia_chat',
 })
 export default class PreferenciaChat extends Model {
   @PrimaryKey

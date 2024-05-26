@@ -11,7 +11,7 @@ import OpcionMenu from './opcion-menu.model';
 import Rol from './rol.model';
 
 @Table({
-  tableName: 'mnt_rol_opcion_menu',
+  underscored: true,  tableName: 'mnt_rol_opcion_menu',
 })
 export default class RolOpcionMenu extends Model {
   @AutoIncrement

@@ -16,7 +16,7 @@ import Usuario from './usuario.model';
 import Mensaje from './mensaje.model';
 
 @Table({
-  tableName: 'mnt_chat',
+  underscored: true,  tableName: 'mnt_chat',
 })
 export default class Chat extends Model {
   @PrimaryKey

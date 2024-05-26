@@ -11,7 +11,7 @@ import {
 import DobleFactorUsuario from './doble-factor-usuario.model';
 
 @Table({
-  tableName: 'mnt_codigo_generado_usuario',
+  underscored: true,  tableName: 'mnt_codigo_generado_usuario',
 })
 export default class CodigoGeneradoUsuario extends Model {
   @PrimaryKey

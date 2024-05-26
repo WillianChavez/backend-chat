@@ -23,12 +23,18 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdateUsuarioPreferenciasDto } from './dto/update-usuario-preferencias.dto';
 import { PerfilService } from './services/perfil.service';
 import { UpdatePerfilDto } from './dto/update-perfil.dto';
+import DispositivoVinculado from 'src/common/database/models/dispositivo-vinculado.model';
+import { DispositivosService } from './services/dispositivos.service';
 
 @ApiBearerAuth()
 @ApiTags('usuario')
 @Controller('usuario')
 export class UsuarioController {
-  constructor(private usuarioService: UsuarioService, private perfilService: PerfilService) {}
+  constructor(
+    private usuarioService: UsuarioService,
+    private perfilService: PerfilService,
+    private dispositivosService: DispositivosService
+  ) {}
 
   @Post()
   async create(@Body() usuarioDto: CreateUsuarioDto) {
@@ -83,5 +89,12 @@ export class UsuarioController {
   ) {
     await this.usuarioService.exist(id);
     return await this.perfilService.update(id, perfilDto, foto);
+  }
+
+  @UseGuards(AuthGuardMiddleware, AuthTfaGuardMiddleware)
+  @Delete(':id/dispositivo/:idDispositivo')
+  async deleteDispositivo(@Param('id') id: number, @Param('idDispositivo') idDispositivo: number) {
+    await this.usuarioService.exist(id);
+    return await this.dispositivosService.eliminarDispositivoVinculado(id, idDispositivo);
   }
 }

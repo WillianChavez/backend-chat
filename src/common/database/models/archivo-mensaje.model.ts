@@ -11,6 +11,7 @@ import TipoArchivo from './tipo-archivo.model';
 import Mensaje from './mensaje.model';
 
 @Table({
+  underscored: true,
   tableName: 'mnt_archivo_mensaje',
 })
 export default class ArchivoMensaje extends Model {

@@ -63,7 +63,7 @@ export class ChatService {
   async findAll(idUsuario?: number) {
     const filterUsuario = {}
 
-    if (idUsuario) filterUsuario['idUsuario'] = idUsuario;
+    if (idUsuario) filterUsuario['id_usuario'] = idUsuario;
 
     // sql para obtener la cantidad de mensajes no leidos de un chat
     const sqlMensajesNoLeidos = `

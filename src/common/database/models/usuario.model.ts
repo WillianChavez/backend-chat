@@ -20,7 +20,7 @@ import PreferenciaUsuario from './preferencia-usuario.model';
 import PreferenciaNotificacion from './preferencia-notificacion.model';
 
 @Table({
-  tableName: 'mnt_usuario',
+  underscored: true,  tableName: 'mnt_usuario',
 })
 export default class Usuario extends Model {
   @PrimaryKey
@@ -52,16 +52,16 @@ export default class Usuario extends Model {
   @HasMany(() => ReaccionMensaje)
   reacciones: ReaccionMensaje[];
 
-  @HasMany(() => ContactoUsuario, 'idUsuario')
+  @HasMany(() => ContactoUsuario, 'id_usuario')
   contactos: ContactoUsuario[];
 
-  @HasMany(() => ContactoUsuario, 'idContacto')
+  @HasMany(() => ContactoUsuario, 'id_contacto')
   contactosDe: ContactoUsuario[];
 
-  @HasMany(() => ContactoBloqueado, 'idUsuario')
+  @HasMany(() => ContactoBloqueado, 'id_usuario')
   contactosBloqueados: ContactoBloqueado[];
 
-  @HasMany(() => ContactoBloqueado, 'idContacto')
+  @HasMany(() => ContactoBloqueado, 'id_contacto')
   contactosBloqueadosDe: ContactoBloqueado[];
 
   @HasMany(() => DispositivoVinculado)

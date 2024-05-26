@@ -10,7 +10,7 @@ import {
 import Usuario from './usuario.model';
 
 @Table({
-  tableName: 'mnt_perfil',
+  underscored: true,  tableName: 'mnt_perfil',
 })
 export default class Perfil extends Model {
   @AutoIncrement

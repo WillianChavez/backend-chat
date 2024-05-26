@@ -11,7 +11,7 @@ import Usuario from './usuario.model';
 import FuenteTipografica from './fuente-tipografica.model';
 
 @Table({
-  tableName: 'mnt_preferencias_usuario',
+  underscored: true,  tableName: 'mnt_preferencias_usuario',
 })
 export default class PreferenciaUsuario extends Model {
   @PrimaryKey

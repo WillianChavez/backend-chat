@@ -12,7 +12,7 @@ import Usuario from './usuario.model';
 import Rol from './rol.model';
 
 @Table({
-  tableName: 'mnt_usuario_chat',
+  underscored: true,  tableName: 'mnt_usuario_chat',
 })
 export default class UsuarioChat extends Model {
   @AutoIncrement

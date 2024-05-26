@@ -2,7 +2,7 @@ import { AutoIncrement, Column, PrimaryKey, Table, Model, HasMany } from 'sequel
 import Chat from './chat.model';
 
 @Table({
-  tableName: 'ctl_tipo_chat',
+  underscored: true,  tableName: 'ctl_tipo_chat',
 })
 export default class TipoChat extends Model {
   @PrimaryKey

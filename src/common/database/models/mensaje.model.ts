@@ -15,8 +15,7 @@ import LecturaMensaje from './lectura-mensaje.model';
 import ReaccionMensaje from './reaccion-mensaje.model';
 
 @Table({
-  tableName: 'mnt_mensaje',
-  underscored: true,
+  underscored: true, tableName: 'mnt_mensaje',
 })
 export default class Mensaje extends Model {
   @AutoIncrement

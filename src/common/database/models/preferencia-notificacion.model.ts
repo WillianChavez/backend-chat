@@ -10,7 +10,7 @@ import {
 import Usuario from './usuario.model';
 
 @Table({
-  tableName: 'mnt_preferencia_notificacion',
+  underscored: true,  tableName: 'mnt_preferencia_notificacion',
 })
 export default class PreferenciaNotificacion extends Model {
   @PrimaryKey

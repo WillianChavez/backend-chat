@@ -2,7 +2,7 @@ import { AutoIncrement, Column, PrimaryKey, Table, Model, HasMany } from 'sequel
 import ArchivoMensaje from './archivo-mensaje.model';
 
 @Table({
-  tableName: 'ctl_tipo_archivo',
+  underscored: true,  tableName: 'ctl_tipo_archivo',
 })
 export default class TipoArchivo extends Model {
   @PrimaryKey

@@ -160,8 +160,6 @@ export class UsuarioService {
       }
     });
 
-
-
     return preferencias;
   }
 }

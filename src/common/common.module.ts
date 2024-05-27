@@ -5,11 +5,6 @@ import { StorageModule } from './storage/storage.module';
 import { MailModule } from './mail/mail.module';
 
 @Module({
-  imports: [
-    envModule,
-    DatabaseModule,
-    StorageModule,
-    MailModule
-  ],
+  imports: [envModule, DatabaseModule, StorageModule, MailModule],
 })
-export class CommonModule { }
+export class CommonModule {}

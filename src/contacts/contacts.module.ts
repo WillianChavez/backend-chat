@@ -15,8 +15,6 @@ import { UsuarioModule } from 'src/usuario/usuario.module';
 })
 export class ContactsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthGuardMiddleware)
-      .forRoutes(ContactsController);
+    consumer.apply(AuthGuardMiddleware).forRoutes(ContactsController);
   }
 }

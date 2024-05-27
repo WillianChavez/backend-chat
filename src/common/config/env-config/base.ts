@@ -12,8 +12,8 @@ export default registerAs('', () => ({
     port: process.env.DB_PORT as unknown as number,
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
-    logger: process.env.DB_LOGGER,
     database: process.env.DB_NAME,
+    logging: process.env.DB_LOGGER !== 'false' ? console.log : false,
   },
 
   appDebug: process.env.DB_DIALECT,

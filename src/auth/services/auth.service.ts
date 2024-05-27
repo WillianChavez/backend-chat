@@ -11,7 +11,6 @@ import { UserTfaDto } from '../dto/usertfa-dto';
 
 @Injectable()
 export class AuthService {
-
   constructor(
     @InjectModel(Usuario)
     private usuarioModel: typeof Usuario,
@@ -19,8 +18,8 @@ export class AuthService {
     private dispositivoVinculadoModel: typeof DispositivoVinculado,
     private jwtService: JwtService,
     private envService: EnvConfigService,
-    private tfaService: TfaService,
-  ) { }
+    private tfaService: TfaService
+  ) {}
 
   /*
    * Esta función se encarga de autenticar a un usuario
@@ -34,7 +33,7 @@ export class AuthService {
     const usuario = await this.usuarioModel.findOne({
       where: {
         nombre: auth.username,
-      }
+      },
     });
 
     /*
@@ -42,9 +41,9 @@ export class AuthService {
      */
     if (!usuario) {
       throw new UnauthorizedException({
-        message: 'Usuario o contraseña incorrectos.'
+        message: 'Usuario o contraseña incorrectos.',
       });
-    };
+    }
 
     /*
      * Comparar la contraseña ingresada con la contraseña almacenada en la base de datos
@@ -52,7 +51,7 @@ export class AuthService {
      */
     if (!(await bcrypt.compare(auth.password, usuario.contra))) {
       throw new UnauthorizedException({
-        message: 'Usuario o contraseña incorrectos.'
+        message: 'Usuario o contraseña incorrectos.',
       });
     }
 
@@ -64,7 +63,7 @@ export class AuthService {
     return {
       ...usuario.hidePassword(),
       tfaRequerido,
-      tfaPasado: !tfaRequerido
+      tfaPasado: !tfaRequerido,
     } as UserTfaDto;
   }
 
@@ -74,7 +73,7 @@ export class AuthService {
    */
   async createToken(usuario: UserTfaDto) {
     return await this.jwtService.signAsync(usuario, {
-      secret: this.envService.secretKey ?? 'secret'
+      secret: this.envService.secretKey ?? 'secret',
     });
   }
 
@@ -85,7 +84,6 @@ export class AuthService {
    * @params {boolean} tfaPasado - Indica si el segundo factor de autenticación fue pasado
    */
   async actualizarTokenDispositivo(idDispositivo: number, token: string, tfaPasado: boolean) {
-
     const dispositivo = await this.dispositivoVinculadoModel.findByPk(idDispositivo);
 
     // Regerar jwt y actualizar los datos
@@ -105,11 +103,11 @@ export class AuthService {
 
   /**
    * Función para vincular un dispositivo a un usuario
-   * 
-   * @param idUsuario 
-   * @param nombreDispositivo 
-   * @param token 
-   * @returns 
+   *
+   * @param idUsuario
+   * @param nombreDispositivo
+   * @param token
+   * @returns
    */
   async vincularDispositivo(usuario: UserTfaDto, nombreDispositivo: string) {
     const dispositivo = await this.dispositivoVinculadoModel.create({
@@ -137,5 +135,18 @@ export class AuthService {
 
   async decryptoToken(token: string) {
     return this.jwtService.decode(token) as UserTfaDto;
+  }
+
+  async logout(id: number, idDispositivo: number) {
+    const dispositivo = await this.dispositivoVinculadoModel.findByPk(idDispositivo);
+
+    if (dispositivo.idUsuario !== id) {
+      throw new UnauthorizedException({
+        message: 'No tienes permisos para realizar esta acción.',
+      });
+    }
+
+    dispositivo.token = null;
+    await dispositivo.save();
   }
 }

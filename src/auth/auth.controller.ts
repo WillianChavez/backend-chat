@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, Res, UnauthorizedException, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Post, Req, Res, UnauthorizedException, UsePipes, ValidationPipe } from "@nestjs/common";
 import { AuthService } from "./services/auth.service";
 import { AuthDto } from "./dto/auth-dto";
 import { TfaService } from "./services/tfa.service";
@@ -58,6 +58,28 @@ export class AuthController {
     return response.json({
       usuario: { ...jwtData, tfaPasado: isValid },
       dispositivo
+    });
+  }
+
+  @Delete('logout')
+  async logout(@Req() request: Request, @Res() response: Response) {
+    const jwtData = request?.jwtData;
+
+    await this.authService.logout(jwtData.id, jwtData.idDispositivo);
+
+    return response.json({
+      message: 'Sesión cerrada correctamente.'
+    });
+  }
+
+  @Delete('disabled-tfa')
+  async disabledTfa(@Req() request: Request, @Res() response: Response) {
+    const jwtData = request?.jwtData;
+
+    await this.tfaService.disableTfa(jwtData.id);
+
+    return response.json({
+      message: 'Autenticación de dos factores deshabilitada correctamente.'
     });
   }
 

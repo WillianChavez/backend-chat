@@ -9,7 +9,6 @@ import { Op } from 'sequelize';
 
 @Injectable()
 export class ContactsService {
-
   constructor(
     @InjectModel(ContactoUsuario)
     private contactoUsuarioModel: typeof ContactoUsuario,
@@ -18,14 +17,14 @@ export class ContactsService {
     @InjectModel(Usuario)
     private usuarioModel: typeof Usuario,
 
-    private sequelize: Sequelize,
-  ) { }
+    private sequelize: Sequelize
+  ) {}
 
   async listFriendRequests(idUsuario: number) {
     return await this.contactoUsuarioModel.findAll({
       attributes: ['id', 'aceptado'],
       where: {
-        idContacto: idUsuario,
+        id_contacto: idUsuario,
         aceptado: false,
       },
       include: [
@@ -33,10 +32,12 @@ export class ContactsService {
           model: Usuario,
           attributes: ['id', 'nombre'],
           as: 'usuario',
-          include: [{
-            model: Perfil,
-            attributes: ['nombre', 'foto'],
-          }]
+          include: [
+            {
+              model: Perfil,
+              attributes: ['nombre', 'foto'],
+            },
+          ],
         },
       ],
     });
@@ -44,11 +45,14 @@ export class ContactsService {
 
   async sendFriendRequest(idUsuario: number, idContacto: number) {
     const contactAccepted = await this.findContactAccepted(idUsuario, idContacto);
-    if (contactAccepted) throw new BadRequestException('No puedes enviar una solicitud a un contacto que ya has aceptado');
+    if (contactAccepted)
+      throw new BadRequestException(
+        'No puedes enviar una solicitud a un contacto que ya has aceptado'
+      );
 
     return await this.contactoUsuarioModel.create({
-      idUsuario,
-      idContacto,
+      id_usuario: idUsuario,
+      id_contacto: idContacto,
       aceptado: false,
     });
   }
@@ -61,15 +65,15 @@ export class ContactsService {
       { aceptado: true },
       {
         where: {
-          idUsuario: idContacto,
-          idContacto: idUsuario,
+          id_usuario: idContacto,
+          id_contacto: idUsuario,
         },
-      },
+      }
     );
 
     return await this.contactoUsuarioModel.create({
-      idUsuario,
-      idContacto,
+      id_usuario: idContacto,
+      id_contacto: idUsuario,
       aceptado: true,
     });
   }
@@ -77,8 +81,8 @@ export class ContactsService {
   private async findContactAccepted(idUsuario: number, idContacto: number) {
     return await this.contactoUsuarioModel.findOne({
       where: {
-        idUsuario,
-        idContacto,
+        id_usuario: idContacto,
+        id_contacto: idUsuario,
         aceptado: true,
       },
     });
@@ -87,25 +91,25 @@ export class ContactsService {
   async blockContact(idUsuario: number, idContacto: number) {
     const isContactAccepted = await this.findContactAccepted(idUsuario, idContacto);
 
-    if (!isContactAccepted) throw new BadRequestException('No puedes bloquear a un contacto que no has aceptado');
-
+    if (!isContactAccepted)
+      throw new BadRequestException('No puedes bloquear a un contacto que no has aceptado');
 
     return await this.contactoBloqueadoModel.create({
-      idUsuario,
-      idUsuarioBloqueado: idContacto,
+      id_usuario: idContacto,
+      id_usuario_bloqueado: idContacto,
     });
   }
 
   async listAllContactsForUser(idUsuario: number) {
-
     const sqlContactoAceptado = `EXISTS(SELECT id FROM mnt_contacto_usuario as c WHERE c.id_usuario = ${idUsuario} AND c.id_contacto = "Usuario".id)`;
     const usuarios = await this.usuarioModel.findAll({
       attributes: {
-        include: ['id', 'nombre',
-          [this.sequelize.literal(sqlContactoAceptado), 'contacto_aceptado']
+        include: [
+          'id',
+          'nombre',
+          [this.sequelize.literal(sqlContactoAceptado), 'contacto_aceptado'],
         ],
-        exclude: ['contra', 'createdAt', 'updatedAt'],
-
+        exclude: ['contra', 'created_at', 'updated_at'],
       },
       where: {
         id: {

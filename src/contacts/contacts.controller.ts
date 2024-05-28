@@ -14,13 +14,13 @@ export class ContactsController {
   ) {}
 
   @Get('list-friend-requests/:idUsuario')
-  async listFriendRequests(@Param('id_usuario') idUsuario: number) {
+  async listFriendRequests(@Param('idUsuario') idUsuario: number) {
     await this.usuarioServices.exist(idUsuario);
     return this.contactsService.listFriendRequests(idUsuario);
   }
 
   @Get('find-contacts/:idUsuario')
-  async findContacts(@Param('id_usuario') idUsuario: number) {
+  async findContacts(@Param('idUsuario') idUsuario: number) {
     await this.usuarioServices.exist(idUsuario);
     return this.contactsService.listAllContactsForUser(idUsuario);
   }

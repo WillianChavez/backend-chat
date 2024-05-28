@@ -8,9 +8,7 @@ import { NewReactionMessageDto } from './dto/new-reaction-message.dto';
 
 @Injectable()
 export class ChatRealTimeService {
-
   constructor(
-
     @InjectModel(Mensaje)
     private mensajeModel: typeof Mensaje,
 
@@ -18,12 +16,10 @@ export class ChatRealTimeService {
     private reaccionMensajeModel: typeof ReaccionMensaje,
 
     @InjectModel(UsuarioChat)
-    private usuarioChatModel: typeof UsuarioChat,
-
-  ) { }
+    private usuarioChatModel: typeof UsuarioChat
+  ) {}
 
   async saveMessage(newMessage: NewMessageDto) {
-
     const message = await this.mensajeModel.create({
       idChat: newMessage.idChat,
       idUsuario: newMessage.idUsuario,
@@ -35,7 +31,6 @@ export class ChatRealTimeService {
   }
 
   async saveReaction(newReaction: NewReactionMessageDto) {
-
     const reaccion = await this.reaccionMensajeModel.create({
       idMensaje: newReaction.idMensaje,
       idUsuario: newReaction.idUsuario,
@@ -49,14 +44,13 @@ export class ChatRealTimeService {
   }
 
   async getRoomsForUser(idUsuario: number) {
-
     const usuarioChats = await this.usuarioChatModel.findAll({
       where: {
-        idUsuario,
-      }
+        id_usuario: idUsuario,
+      },
     });
 
-    const rooms = usuarioChats.map(usuarioChat => 'room-' + usuarioChat.idChat);
+    const rooms = usuarioChats.map((usuarioChat) => 'room-' + usuarioChat.idChat);
     return { rooms };
   }
 }

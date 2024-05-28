@@ -7,6 +7,8 @@ import ContactoBloqueado from 'src/common/database/models/contacto-bloqueado.mod
 import { UsuarioService } from 'src/usuario/services/usuario.service';
 import { AuthGuardMiddleware } from 'src/auth/middleware/auth-guard/auth-guard.middleware';
 import { UsuarioModule } from 'src/usuario/usuario.module';
+import { ChatModule } from 'src/chat/chat.module';
+import { ChatService } from 'src/chat/services/chat.service';
 
 @Module({
   imports: [SequelizeModule.forFeature([ContactoUsuario, ContactoBloqueado]), UsuarioModule],

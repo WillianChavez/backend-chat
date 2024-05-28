@@ -16,7 +16,6 @@ import Reaccion from 'src/common/database/models/reaccion.model';
 
 @Injectable()
 export class ChatService {
-
   constructor(
     @InjectModel(Chat)
     private chatModel: typeof Chat,
@@ -36,8 +35,8 @@ export class ChatService {
     @InjectModel(Reaccion)
     private reaccionModel: typeof Reaccion,
 
-    private sequelize: Sequelize,
-  ) { }
+    private sequelize: Sequelize
+  ) {}
 
   async create(createChatDto: CreateChatDto, file: Express.Multer.File) {
     const { idUsuario, idTipoChat, nombre } = createChatDto;
@@ -49,18 +48,16 @@ export class ChatService {
     if (!tipoChat) throw new BadRequestException('Tipo de chat no encontrado');
 
     const newChat = await this.chatModel.create({
-      idTipoChat,
+      id_tipo_chat: idTipoChat,
       nombre,
-      uriFoto: file ? file.filename : null,
+      uri_foto: file ? file.filename : null,
     });
 
     return newChat;
   }
 
-
-
   async findAll(idUsuario?: number) {
-    const filterUsuario = {}
+    const filterUsuario = {};
 
     if (idUsuario) filterUsuario['id_usuario'] = idUsuario;
 
@@ -77,23 +74,21 @@ export class ChatService {
       include: [
         {
           model: UsuarioChat,
-          where: filterUsuario
-
+          where: filterUsuario,
         },
         {
           model: PreferenciaChat,
         },
         {
-          model: TipoChat
+          model: TipoChat,
         },
         {
           model: Mensaje,
           order: [['fechaCreacion', 'DESC']],
           limit: 1,
         },
-      ]
+      ],
     });
-
 
     return chats;
   }
@@ -109,7 +104,7 @@ export class ChatService {
             model: PreferenciaChat,
           },
           {
-            model: TipoChat
+            model: TipoChat,
           },
           {
             model: Mensaje,
@@ -122,7 +117,7 @@ export class ChatService {
               },
             ],
           },
-        ]
+        ],
       });
 
       return chat;
@@ -133,11 +128,10 @@ export class ChatService {
 
   async createGroupChat(createGroupChatDto: CreateGroupChatDto) {
     try {
-
       const { nombre, idsUsuarios } = createGroupChatDto;
 
       const tipoChatGrupal = await this.tipoChatModel.findOne({
-        where: { nombre: 'Grupal' }
+        where: { nombre: 'Grupal' },
       });
 
       if (!tipoChatGrupal) throw new BadRequestException('Tipo de chat grupal no encontrado');
@@ -146,22 +140,25 @@ export class ChatService {
         idTipoChat: tipoChatGrupal.id,
       });
 
-      const promiseUsuariosChat = idsUsuarios.map(idUsuario => {
-        this.usuarioModel.findByPk(idUsuario).then(usuario => {
-          if (!usuario) throw new BadRequestException('Usuario no encontrado');
+      const promiseUsuariosChat = idsUsuarios.map((idUsuario) => {
+        this.usuarioModel
+          .findByPk(idUsuario)
+          .then((usuario) => {
+            if (!usuario) throw new BadRequestException('Usuario no encontrado');
 
-          return this.usuarioChatModel.create({
-            idChat: newChat.id,
-            idUsuario,
+            return this.usuarioChatModel.create({
+              idChat: newChat.id,
+              idUsuario,
+            });
+          })
+          .catch((error) => {
+            throw error;
           });
-        }).catch(error => {
-          throw error;
-        });
       });
 
       await Promise.all(promiseUsuariosChat);
 
-      const promisePreferenciasChat = idsUsuarios.map(idUsuario => {
+      const promisePreferenciasChat = idsUsuarios.map((idUsuario) => {
         this.preferenciaChatModel.create({
           idChat: newChat.id,
           idUsuario,

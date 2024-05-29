@@ -6,10 +6,11 @@ import ContactoUsuario from 'src/common/database/models/contacto-usuario.model';
 import Perfil from 'src/common/database/models/perfil.model';
 import { Sequelize } from 'sequelize-typescript';
 import { Op } from 'sequelize';
+import { ChatService } from 'src/chat/services/chat.service';
+import { CreateChatDto } from 'src/chat/dto/create-chat.dto';
 
 @Injectable()
 export class ContactsService {
-
   constructor(
     @InjectModel(ContactoUsuario)
     private contactoUsuarioModel: typeof ContactoUsuario,
@@ -19,7 +20,9 @@ export class ContactsService {
     private usuarioModel: typeof Usuario,
 
     private sequelize: Sequelize,
-  ) { }
+
+    private chatService: ChatService
+  ) {}
 
   async listFriendRequests(idUsuario: number) {
     return await this.contactoUsuarioModel.findAll({
@@ -33,10 +36,12 @@ export class ContactsService {
           model: Usuario,
           attributes: ['id', 'nombre'],
           as: 'usuario',
-          include: [{
-            model: Perfil,
-            attributes: ['nombre', 'foto'],
-          }]
+          include: [
+            {
+              model: Perfil,
+              attributes: ['nombre', 'foto'],
+            },
+          ],
         },
       ],
     });
@@ -44,7 +49,10 @@ export class ContactsService {
 
   async sendFriendRequest(idUsuario: number, idContacto: number) {
     const contactAccepted = await this.findContactAccepted(idUsuario, idContacto);
-    if (contactAccepted) throw new BadRequestException('No puedes enviar una solicitud a un contacto que ya has aceptado');
+    if (contactAccepted)
+      throw new BadRequestException(
+        'No puedes enviar una solicitud a un contacto que ya has aceptado'
+      );
 
     return await this.contactoUsuarioModel.create({
       idUsuario,
@@ -64,14 +72,22 @@ export class ContactsService {
           idUsuario: idContacto,
           idContacto: idUsuario,
         },
-      },
+      }
     );
 
-    return await this.contactoUsuarioModel.create({
+    await this.contactoUsuarioModel.create({
       idUsuario,
       idContacto,
       aceptado: true,
     });
+
+    const newChat: CreateChatDto = {
+      idTipoChat: 1,
+      idUsuarios: [idUsuario, idContacto],
+    };
+
+    const chat = await this.chatService.create(newChat);
+    return chat;
   }
 
   private async findContactAccepted(idUsuario: number, idContacto: number) {
@@ -87,8 +103,8 @@ export class ContactsService {
   async blockContact(idUsuario: number, idContacto: number) {
     const isContactAccepted = await this.findContactAccepted(idUsuario, idContacto);
 
-    if (!isContactAccepted) throw new BadRequestException('No puedes bloquear a un contacto que no has aceptado');
-
+    if (!isContactAccepted)
+      throw new BadRequestException('No puedes bloquear a un contacto que no has aceptado');
 
     return await this.contactoBloqueadoModel.create({
       idUsuario,
@@ -97,15 +113,15 @@ export class ContactsService {
   }
 
   async listAllContactsForUser(idUsuario: number) {
-
     const sqlContactoAceptado = `EXISTS(SELECT id FROM mnt_contacto_usuario as c WHERE c.id_usuario = ${idUsuario} AND c.id_contacto = "Usuario".id)`;
     const usuarios = await this.usuarioModel.findAll({
       attributes: {
-        include: ['id', 'nombre',
-          [this.sequelize.literal(sqlContactoAceptado), 'contacto_aceptado']
+        include: [
+          'id',
+          'nombre',
+          [this.sequelize.literal(sqlContactoAceptado), 'contacto_aceptado'],
         ],
         exclude: ['contra', 'createdAt', 'updatedAt'],
-
       },
       where: {
         id: {

@@ -38,22 +38,70 @@ export class ChatService {
     private sequelize: Sequelize
   ) {}
 
-  async create(createChatDto: CreateChatDto, file: Express.Multer.File) {
-    const { idUsuario, idTipoChat, nombre } = createChatDto;
-
-    const usuario = await this.usuarioModel.findByPk(idUsuario);
-    if (!usuario) throw new BadRequestException('Usuario no encontrado');
+  async create(createChatDto: CreateChatDto, file: Express.Multer.File | undefined = undefined) {
+    const { idUsuarios, idTipoChat, nombre } = createChatDto;
 
     const tipoChat = await this.tipoChatModel.findByPk(idTipoChat);
     if (!tipoChat) throw new BadRequestException('Tipo de chat no encontrado');
 
+    const usuarios = [];
+
+    idUsuarios.forEach(async (idUsuario) => {
+      const usuario = await this.usuarioModel.findByPk(idUsuario);
+      if (!usuario) throw new BadRequestException('Usuario no encontrado');
+      usuarios.push(usuario);
+    });
+
+    if (tipoChat.nombre === 'Grupal') {
+      const newGroupChat: CreateGroupChatDto = {
+        nombre,
+        idsUsuarios: idUsuarios,
+      };
+
+      const newChat = await this.createGroupChat(newGroupChat);
+      return newChat;
+    }
+
+    if (idUsuarios.length > 2)
+      throw new BadRequestException('No se puede crear un chat privado con más de 2 usuarios');
+
     const newChat = await this.chatModel.create({
       id_tipo_chat: idTipoChat,
-      nombre,
       uri_foto: file ? file.filename : null,
     });
 
-    return newChat;
+    const usuarioPrincipal = usuarios[0];
+    const usuarioSecundario = usuarios[1];
+
+    const preferenciaChatPrincipal = await this.preferenciaChatModel.create({
+      id_chat: newChat.id,
+      id_usuario: usuarioPrincipal.id,
+      nombre: usuarioSecundario.nombre,
+      fondoColor: '#FFFFFF',
+    });
+
+    const preferenciaChatSecundario = await this.preferenciaChatModel.create({
+      id_chat: newChat.id,
+      id_usuario: usuarioSecundario.id,
+      nombre: usuarioPrincipal.nombre,
+      fondoColor: '#FFFFFF',
+    });
+
+    const usuarioChatPrincipal = await this.usuarioChatModel.create({
+      id_chat: newChat.id,
+      id_usuario: usuarioPrincipal.id,
+    });
+
+    const usuarioChatSecundario = await this.usuarioChatModel.create({
+      id_chat: newChat.id,
+      id_usuario: usuarioSecundario.id,
+    });
+
+    return {
+      chat: newChat,
+      preferencias: [preferenciaChatPrincipal, preferenciaChatSecundario],
+      usuarios: [usuarioChatPrincipal, usuarioChatSecundario],
+    };
   }
 
   async findAll(idUsuario?: number) {
@@ -137,7 +185,7 @@ export class ChatService {
       if (!tipoChatGrupal) throw new BadRequestException('Tipo de chat grupal no encontrado');
 
       const newChat = await this.chatModel.create({
-        idTipoChat: tipoChatGrupal.id,
+        id_tipo_chat: tipoChatGrupal.id,
       });
 
       const promiseUsuariosChat = idsUsuarios.map((idUsuario) => {
@@ -147,8 +195,8 @@ export class ChatService {
             if (!usuario) throw new BadRequestException('Usuario no encontrado');
 
             return this.usuarioChatModel.create({
-              idChat: newChat.id,
-              idUsuario,
+              id_chat: newChat.id,
+              id_usuario: idUsuario,
             });
           })
           .catch((error) => {
@@ -160,10 +208,10 @@ export class ChatService {
 
       const promisePreferenciasChat = idsUsuarios.map((idUsuario) => {
         this.preferenciaChatModel.create({
-          idChat: newChat.id,
-          idUsuario,
+          id_chat: newChat.id,
+          id_usuario: idUsuario,
           nombre,
-          fondoColor: '#FFFFFF',
+          fondo_color: '#FFFFFF',
         });
       });
 

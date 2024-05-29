@@ -14,8 +14,22 @@ import LecturaMensaje from 'src/common/database/models/lectura-mensaje.model';
 import Reaccion from 'src/common/database/models/reaccion.model';
 
 @Module({
-  imports: [SequelizeModule.forFeature([Chat, TipoChat, UsuarioChat, PreferenciaChat, Usuario, TipoChat, Mensaje, LecturaMensaje, Reaccion]), ChatRealTimeModule],
+  imports: [
+    SequelizeModule.forFeature([
+      Chat,
+      TipoChat,
+      UsuarioChat,
+      PreferenciaChat,
+      Usuario,
+      TipoChat,
+      Mensaje,
+      LecturaMensaje,
+      Reaccion,
+    ]),
+    ChatRealTimeModule,
+  ],
   controllers: [ChatController],
-  providers: [ChatService, TipoChatService]
+  providers: [ChatService, TipoChatService],
+  exports: [SequelizeModule, ChatService, TipoChatService],
 })
-export class ChatModule { }
+export class ChatModule {}

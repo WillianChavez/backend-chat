@@ -6,12 +6,12 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert('ctl_tipo_chat', [{
       nombre: 'Grupal',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      created_at: new Date(),
+      updated_at: new Date(),
     }, {
       nombre: 'Individual',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      created_at: new Date(),
+      updated_at: new Date(),
     }
     ], {});
   },

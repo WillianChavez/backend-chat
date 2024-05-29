@@ -9,9 +9,15 @@ import { AuthService } from 'src/auth/services/auth.service';
 import Usuario from 'src/common/database/models/usuario.model';
 import DispositivoVinculado from 'src/common/database/models/dispositivo-vinculado.model';
 import UsuarioChat from 'src/common/database/models/usuario-chat.model';
+import { UsuarioModule } from 'src/usuario/usuario.module';
+import { UsuarioService } from 'src/usuario/services/usuario.service';
 
 @Module({
-  imports: [AuthModule, SequelizeModule.forFeature([Mensaje, ReaccionMensaje, Usuario, DispositivoVinculado, UsuarioChat])],
-  providers: [ChatRealTimeGateway, ChatRealTimeService, AuthService],
+  imports: [
+    AuthModule,
+    SequelizeModule.forFeature([Mensaje, ReaccionMensaje, DispositivoVinculado, UsuarioChat]),
+    UsuarioModule,
+  ],
+  providers: [ChatRealTimeGateway, ChatRealTimeService, AuthService, UsuarioService],
 })
-export class ChatRealTimeModule { }
+export class ChatRealTimeModule {}

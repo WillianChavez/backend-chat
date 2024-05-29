@@ -153,6 +153,7 @@ export class ChatService {
         },
         {
           model: TipoChat,
+          attributes: ['nombre'],
         },
         {
           model: Mensaje,

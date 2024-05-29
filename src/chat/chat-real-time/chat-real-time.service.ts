@@ -46,7 +46,7 @@ export class ChatRealTimeService {
   async getRoomsForUser(idUsuario: number) {
     const usuarioChats = await this.usuarioChatModel.findAll({
       where: {
-        id_usuario: idUsuario,
+        idUsuario: idUsuario,
       },
     });
 

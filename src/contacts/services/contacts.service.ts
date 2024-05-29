@@ -28,7 +28,7 @@ export class ContactsService {
     return await this.contactoUsuarioModel.findAll({
       attributes: ['id', 'aceptado'],
       where: {
-        idContacto: idUsuario,
+        id_contacto: idUsuario,
         aceptado: false,
       },
       include: [
@@ -55,8 +55,8 @@ export class ContactsService {
       );
 
     return await this.contactoUsuarioModel.create({
-      idUsuario,
-      idContacto,
+      id_usuario: idUsuario,
+      id_contacto: idContacto,
       aceptado: false,
     });
   }
@@ -69,20 +69,20 @@ export class ContactsService {
       { aceptado: true },
       {
         where: {
-          idUsuario: idContacto,
-          idContacto: idUsuario,
+          id_usuario: idContacto,
+          id_contacto: idUsuario,
         },
       }
     );
 
     await this.contactoUsuarioModel.create({
-      idUsuario,
-      idContacto,
+      id_usuario: idContacto,
+      id_contacto: idUsuario,
       aceptado: true,
     });
 
     const newChat: CreateChatDto = {
-      idTipoChat: 1,
+      idTipoChat: 2,
       idUsuarios: [idUsuario, idContacto],
     };
 
@@ -93,8 +93,8 @@ export class ContactsService {
   private async findContactAccepted(idUsuario: number, idContacto: number) {
     return await this.contactoUsuarioModel.findOne({
       where: {
-        idUsuario,
-        idContacto,
+        id_usuario: idContacto,
+        id_contacto: idUsuario,
         aceptado: true,
       },
     });
@@ -107,8 +107,8 @@ export class ContactsService {
       throw new BadRequestException('No puedes bloquear a un contacto que no has aceptado');
 
     return await this.contactoBloqueadoModel.create({
-      idUsuario,
-      idUsuarioBloqueado: idContacto,
+      id_usuario: idContacto,
+      id_usuario_bloqueado: idContacto,
     });
   }
 
@@ -121,7 +121,7 @@ export class ContactsService {
           'nombre',
           [this.sequelize.literal(sqlContactoAceptado), 'contacto_aceptado'],
         ],
-        exclude: ['contra', 'createdAt', 'updatedAt'],
+        exclude: ['contra', 'created_at', 'updated_at'],
       },
       where: {
         id: {

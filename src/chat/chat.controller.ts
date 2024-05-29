@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFile, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseInterceptors,
+  UploadedFile,
+  Put,
+} from '@nestjs/common';
 import { ChatService } from './services/chat.service';
 import { TipoChatService } from './services/tipo-chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
@@ -14,8 +23,7 @@ export class ChatController {
   constructor(
     private readonly chatService: ChatService,
     private readonly tipoChatService: TipoChatService
-  ) { }
-
+  ) {}
 
   @Get('/')
   findAll() {
@@ -24,39 +32,29 @@ export class ChatController {
 
   @Get('/tipos')
   async listAllTipoChat() {
-    const tipos = await this.tipoChatService.listAll()
+    const tipos = await this.tipoChatService.listAll();
     return tipos;
-
   }
 
   @Get('/reacciones')
   async listAllReacciones() {
-    const tipos = await this.chatService.listReacciones()
+    const tipos = await this.chatService.listReacciones();
     return tipos;
-
   }
 
   @Get('/usuario/:idUsuario')
-  findOne(@Param('id') idUsuario: number) {
+  findOne(@Param('idUsuario') idUsuario: number) {
     return this.chatService.findAll(idUsuario);
   }
 
-
   @Post()
-  @UseInterceptors(
-    FileInterceptor('file'),
-  )
-  create(
-    @Body() createChatDto: CreateChatDto,
-    @UploadedFile() file: Express.Multer.File
-  ) {
+  @UseInterceptors(FileInterceptor('file'))
+  create(@Body() createChatDto: CreateChatDto, @UploadedFile() file: Express.Multer.File) {
     return this.chatService.create(createChatDto, file);
   }
 
   @Post('/group')
-  @UseInterceptors(
-    FileInterceptor('file'),
-  )
+  @UseInterceptors(FileInterceptor('file'))
   createGroup(
     @Body() createGroupChatDto: CreateGroupChatDto,
     @UploadedFile() file: Express.Multer.File
@@ -72,5 +70,4 @@ export class ChatController {
   ) {
     return this.chatService.updatePreferenciaChat(idPreferenciaChat, updatePreferenciaChatDto);
   }
-
 }

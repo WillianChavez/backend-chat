@@ -12,7 +12,8 @@ import Usuario from './usuario.model';
 import Rol from './rol.model';
 
 @Table({
-  underscored: true,  tableName: 'mnt_usuario_chat',
+  underscored: true,
+  tableName: 'mnt_usuario_chat',
 })
 export default class UsuarioChat extends Model {
   @AutoIncrement
@@ -27,7 +28,7 @@ export default class UsuarioChat extends Model {
   chat: Chat;
 
   @ForeignKey(() => Usuario)
-  IdUsuario: Usuario;
+  idUsuario: Usuario;
 
   @BelongsTo(() => Usuario)
   usuario: Usuario;

@@ -8,16 +8,19 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 @ApiTags('contacts')
 @Controller('contacts')
 export class ContactsController {
-  constructor(private readonly contactsService: ContactsService, private readonly usuarioServices: UsuarioService) { }
+  constructor(
+    private readonly contactsService: ContactsService,
+    private readonly usuarioServices: UsuarioService
+  ) {}
 
   @Get('list-friend-requests/:idUsuario')
-  async listFriendRequests(@Param('id_usuario') idUsuario: number) {
+  async listFriendRequests(@Param('idUsuario') idUsuario: number) {
     await this.usuarioServices.exist(idUsuario);
     return this.contactsService.listFriendRequests(idUsuario);
   }
 
   @Get('find-contacts/:idUsuario')
-  async findContacts(@Param('id_usuario') idUsuario: number) {
+  async findContacts(@Param('idUsuario') idUsuario: number) {
     await this.usuarioServices.exist(idUsuario);
     return this.contactsService.listAllContactsForUser(idUsuario);
   }
@@ -48,5 +51,4 @@ export class ContactsController {
 
     return this.contactsService.blockContact(idUsuario, idContacto);
   }
-
 }

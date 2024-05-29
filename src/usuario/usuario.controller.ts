@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   UploadedFile,
+  UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -25,6 +26,7 @@ import { PerfilService } from './services/perfil.service';
 import { UpdatePerfilDto } from './dto/update-perfil.dto';
 import DispositivoVinculado from 'src/common/database/models/dispositivo-vinculado.model';
 import { DispositivosService } from './services/dispositivos.service';
+import { DeleteFileOnErrorFilter } from 'src/common/storage/filters/delete-file-on-error.filter';
 
 @ApiBearerAuth()
 @ApiTags('usuario')
@@ -41,15 +43,16 @@ export class UsuarioController {
     return await this.usuarioService.create(usuarioDto);
   }
 
+  @Get()
+  async index() {
+    return await this.usuarioService.index();
+  }
+
   @Get(':id')
   async show(@Param('id', ParseIntPipe) id: number) {
     return await this.usuarioService.show(id);
   }
 
-  @Get()
-  async index() {
-    return await this.usuarioService.index();
-  }
 
   @Patch(':id')
   async update(@Param('id', ParseIntPipe) id: number, @Body() usuarioDto: UpdateUsuarioDto) {
@@ -80,6 +83,7 @@ export class UsuarioController {
   }
 
   @UseGuards(AuthGuardMiddleware, AuthTfaGuardMiddleware)
+  @UseFilters(new DeleteFileOnErrorFilter())
   @UseInterceptors(FileInterceptor('foto'))
   @Put(':id/perfil')
   async updatePerfil(

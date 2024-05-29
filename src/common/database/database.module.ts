@@ -12,4 +12,4 @@ import { SequelizeOptions } from './providers/database.provider';
   ],
   exports: [SequelizeModule],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}

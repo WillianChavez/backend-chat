@@ -16,8 +16,8 @@ async function bootstrap() {
     })
   );
 
-
-  const config = new DocumentBuilder().addBearerAuth()
+  const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('API')
     .setDescription('API para minichat')
     .setVersion('1.0')

@@ -14,6 +14,7 @@ import { Socket, Server } from 'socket.io';
 import { NewMessageDto } from './dto/new-message.dto';
 import { NewReactionMessageDto } from './dto/new-reaction-message.dto';
 import { AuthService } from 'src/auth/services/auth.service';
+import { UsuarioService } from 'src/usuario/services/usuario.service';
 
 @WebSocketGateway()
 export class ChatRealTimeGateway
@@ -24,7 +25,9 @@ export class ChatRealTimeGateway
   constructor(
     private readonly chatRealTimeService: ChatRealTimeService,
 
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+
+    private readonly usuarioService: UsuarioService
   ) {}
 
   afterInit() {
@@ -42,11 +45,19 @@ export class ChatRealTimeGateway
 
   // Método para manejar los nuevos mensajes recibidos del cliente y enviarlos a los demás clientes
   @SubscribeMessage('send-message')
-  async sendMessage(@MessageBody() newMessage: NewMessageDto, @ConnectedSocket() client: Socket) {
-    const { room, message } = await this.chatRealTimeService.saveMessage(newMessage);
-
-    console.log(newMessage, room, message)
-
+  async sendMessage(
+    @MessageBody() newMessageDto: NewMessageDto,
+    @ConnectedSocket() client: Socket
+  ) {
+    const usuario = await this.usuarioService.exist(newMessageDto.idUsuario);
+    const { room, message } = await this.chatRealTimeService.saveMessage(newMessageDto);
+    const newMessage = {
+      usuario: {
+        id: usuario.id,
+        nombre: usuario.nombre,
+      },
+      message,
+    };
     client.broadcast.to(room).emit('new-message', newMessage);
   }
 

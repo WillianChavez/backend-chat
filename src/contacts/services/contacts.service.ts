@@ -28,7 +28,7 @@ export class ContactsService {
     return await this.contactoUsuarioModel.findAll({
       attributes: ['id', 'aceptado'],
       where: {
-        id_contacto: idUsuario,
+        idContacto: idUsuario,
         aceptado: false,
       },
       include: [
@@ -55,8 +55,8 @@ export class ContactsService {
       );
 
     return await this.contactoUsuarioModel.create({
-      id_usuario: idUsuario,
-      id_contacto: idContacto,
+      idUsuario: idUsuario,
+      idContacto: idContacto,
       aceptado: false,
     });
   }
@@ -69,15 +69,15 @@ export class ContactsService {
       { aceptado: true },
       {
         where: {
-          id_usuario: idContacto,
-          id_contacto: idUsuario,
+          idUsuario: idUsuario,
+          idContacto: idContacto,
         },
       }
     );
 
     await this.contactoUsuarioModel.create({
-      id_usuario: idContacto,
-      id_contacto: idUsuario,
+      idUsuario: idUsuario,
+      idContacto: idContacto,
       aceptado: true,
     });
 
@@ -93,8 +93,8 @@ export class ContactsService {
   private async findContactAccepted(idUsuario: number, idContacto: number) {
     return await this.contactoUsuarioModel.findOne({
       where: {
-        id_usuario: idContacto,
-        id_contacto: idUsuario,
+        idUsuario: idContacto,
+        idContacto: idUsuario,
         aceptado: true,
       },
     });
@@ -107,8 +107,8 @@ export class ContactsService {
       throw new BadRequestException('No puedes bloquear a un contacto que no has aceptado');
 
     return await this.contactoBloqueadoModel.create({
-      id_usuario: idContacto,
-      id_usuario_bloqueado: idContacto,
+      idUsuario: idContacto,
+      idUsuarioBloqueado: idContacto,
     });
   }
 

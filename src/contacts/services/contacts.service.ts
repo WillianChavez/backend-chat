@@ -6,6 +6,8 @@ import ContactoUsuario from 'src/common/database/models/contacto-usuario.model';
 import Perfil from 'src/common/database/models/perfil.model';
 import { Sequelize } from 'sequelize-typescript';
 import { Op } from 'sequelize';
+import { ChatService } from 'src/chat/services/chat.service';
+import { CreateChatDto } from 'src/chat/dto/create-chat.dto';
 
 @Injectable()
 export class ContactsService {
@@ -17,7 +19,9 @@ export class ContactsService {
     @InjectModel(Usuario)
     private usuarioModel: typeof Usuario,
 
-    private sequelize: Sequelize
+    private sequelize: Sequelize,
+
+    private chatService: ChatService
   ) {}
 
   async listFriendRequests(idUsuario: number) {
@@ -71,11 +75,19 @@ export class ContactsService {
       }
     );
 
-    return await this.contactoUsuarioModel.create({
+    await this.contactoUsuarioModel.create({
       id_usuario: idContacto,
       id_contacto: idUsuario,
       aceptado: true,
     });
+
+    const newChat: CreateChatDto = {
+      idTipoChat: 2,
+      idUsuarios: [idUsuario, idContacto],
+    };
+
+    const chat = await this.chatService.create(newChat);
+    return chat;
   }
 
   private async findContactAccepted(idUsuario: number, idContacto: number) {

@@ -45,7 +45,9 @@ export class ChatRealTimeGateway
   async sendMessage(@MessageBody() newMessage: NewMessageDto, @ConnectedSocket() client: Socket) {
     const { room, message } = await this.chatRealTimeService.saveMessage(newMessage);
 
-    client.broadcast.to(room).emit('new-message', message);
+    console.log(newMessage, room, message)
+
+    client.broadcast.to(room).emit('new-message', newMessage);
   }
 
   // Método para manejar las reacciones a los mensajes
@@ -67,6 +69,6 @@ export class ChatRealTimeGateway
       client.join(rooms);
     }
 
-    client.emit('joined-room');
+    client.emit('joined-room', 'Joined room successfully');
   }
 }

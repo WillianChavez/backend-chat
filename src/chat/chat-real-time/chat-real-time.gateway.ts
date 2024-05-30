@@ -31,7 +31,6 @@ export class ChatRealTimeGateway
   ) {}
 
   afterInit() {
-    console.log(this.server);
     console.log('Socket server initialized');
   }
 

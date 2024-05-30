@@ -15,47 +15,56 @@ Este es el repositorio del backend para una aplicación de chat desarrollada con
 
 1. Clona este repositorio en tu máquina local utilizando Git:
 
-    ```
-    git clone git@github.com:WillianChavez/backend-chat.git
-    ```
+   ```
+   git clone git@github.com:WillianChavez/backend-chat.git
+   ```
 
 2. Navega al directorio del proyecto:
 
-    ```
-    cd backend-chat
-    ```
+   ```
+   cd backend-chat
+   ```
 
 3. Instala las dependencias utilizando npm:
 
-    ```
-    npm install
-    ```
+   ```
+   npm install
+   ```
 
 4. Configura las variables de entorno creando un archivo `.env` en el directorio raíz del proyecto y proporciona los valores necesarios para las siguientes variables:
 
-    ```
-    HOST=localhost
-    PORT=8000
-    APP_ENV=desarrollo
-    SECRET_KEY=clave_secreta
+   ```
+   HOST=localhost
+   PORT=8000
+   APP_ENV=desarrollo
+   SECRET_KEY=clave_secreta
 
-    DB_HOST=0.0.0.0
-    DB_PORT=5432
-    DB_DATABASE=chat
-    DB_USERNAME=postgres
-    DB_PASSWORD=postgres
-    DB_DIALECT=postgres
+   DB_HOST=0.0.0.0
+   DB_PORT=5432
+   DB_NAME=chat
+   DB_USERNAME=postgres
+   DB_PASSWORD=postgres
+   DB_DIALECT=postgres
 
-    APP_DEBUG=true
-    ```
+   APP_DEBUG=true
+
+
+   MAIL_HOST=localhsot
+   MAIL_PORT=2525
+   MAIL_USER=user
+   MAIL_PASS=passsword
+   MAIL_SECURE=false
+   MAIL_FROM='Minichat<noreply@minichat.dev>
+
+   ```
 
 ## Uso
 
 1. Inicia el servidor en modo dev:
 
-    ```
-    npm run start:dev
-    ```
+   ```
+   npm run start:dev
+   ```
 
 2. El servidor estará escuchando en el puerto especificado en tu archivo `.env` (por defecto, el puerto 8000).
 
@@ -72,6 +81,4 @@ Si deseas contribuir a este proyecto, por favor sigue los siguientes pasos:
 5. Sube tus cambios a tu repositorio fork: `git push origin mi-contribucion`.
 6. Crea un nuevo Pull Request en este repositorio.
 
-
 Este proyecto fue desarrollado por el equipo de PDM Un(https://github.com/tu-usuario).
-

@@ -13,8 +13,10 @@ import TipoChat from './tipo-chat.model';
 import PreferenciaChat from './preferencia-chat.model';
 import UsuarioChat from './usuario-chat.model';
 import Usuario from './usuario.model';
+import Mensaje from './mensaje.model';
 
 @Table({
+  underscored: true,
   tableName: 'mnt_chat',
 })
 export default class Chat extends Model {
@@ -23,14 +25,11 @@ export default class Chat extends Model {
   @Column
   id: number;
 
-  @Column
-  nombre: string;
-
-  @Column
-  descripcion: string;
-
   @CreatedAt
   fechaCreacion: Date;
+
+  @Column
+  uriFoto: string;
 
   @ForeignKey(() => TipoChat)
   idTipoChat: number;
@@ -43,4 +42,7 @@ export default class Chat extends Model {
 
   @HasMany(() => UsuarioChat)
   usuarios: Usuario[];
+
+  @HasMany(() => Mensaje)
+  mensajes: Mensaje[];
 }

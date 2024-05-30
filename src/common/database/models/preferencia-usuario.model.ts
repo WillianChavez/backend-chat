@@ -11,6 +11,7 @@ import Usuario from './usuario.model';
 import FuenteTipografica from './fuente-tipografica.model';
 
 @Table({
+  underscored: true,
   tableName: 'mnt_preferencias_usuario',
 })
 export default class PreferenciaUsuario extends Model {
@@ -31,6 +32,8 @@ export default class PreferenciaUsuario extends Model {
   @BelongsTo(() => FuenteTipografica)
   fuente: FuenteTipografica;
 
-  @Column
+  @Column({
+    defaultValue: false,
+  })
   temaOscuro: boolean;
 }

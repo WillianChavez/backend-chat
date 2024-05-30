@@ -10,5 +10,6 @@ import { SequelizeOptions } from './providers/database.provider';
       inject: [EnvConfigService],
     }),
   ],
+  exports: [SequelizeModule],
 })
 export class DatabaseModule {}

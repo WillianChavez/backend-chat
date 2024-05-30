@@ -12,6 +12,7 @@ import Usuario from './usuario.model';
 import CodigoGeneradoUsuario from './codigo-generado-usuario.model';
 
 @Table({
+  underscored: true,
   tableName: 'mnt_doble_factor_usuario',
 })
 export default class DobleFactorUsuario extends Model {
@@ -29,6 +30,10 @@ export default class DobleFactorUsuario extends Model {
   @Column
   secret: string;
 
-  @HasMany(() => CodigoGeneradoUsuario)
+  @HasMany(() => CodigoGeneradoUsuario, {
+    hooks: true,
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   codigosGenerados: CodigoGeneradoUsuario[];
 }

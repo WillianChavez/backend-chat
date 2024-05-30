@@ -11,7 +11,7 @@ import {
 import ReaccionMensaje from './reaccion-mensaje.model';
 
 @Table({
-  tableName: 'ctl_reaccion',
+  underscored: true,  tableName: 'ctl_reaccion',
 })
 export default class Reaccion extends Model {
   @PrimaryKey

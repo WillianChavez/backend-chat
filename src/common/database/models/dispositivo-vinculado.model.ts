@@ -9,9 +9,10 @@ import {
   Table,
 } from 'sequelize-typescript';
 import Usuario from './usuario.model';
+import { TEXT } from 'sequelize';
 
 @Table({
-  tableName: 'mnt_dispositivo_vinculado',
+  underscored: true,  tableName: 'mnt_dispositivo_vinculado',
 })
 export default class DispositivoVinculado extends Model {
   @PrimaryKey
@@ -27,6 +28,9 @@ export default class DispositivoVinculado extends Model {
 
   @Column
   nombreDispositivo: string;
+
+  @Column(TEXT())
+  token: string;
 
   @CreatedAt
   fecha: Date;

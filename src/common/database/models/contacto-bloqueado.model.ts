@@ -10,7 +10,7 @@ import {
 import Usuario from './usuario.model';
 
 @Table({
-  tableName: 'mnt_contacto_bloqueado',
+  underscored: true,  tableName: 'mnt_contacto_bloqueado',
 })
 export default class ContactoBloqueado extends Model {
   @PrimaryKey
@@ -21,12 +21,12 @@ export default class ContactoBloqueado extends Model {
   @ForeignKey(() => Usuario)
   idContacto: number;
 
-  @BelongsTo(() => Usuario, 'idContacto')
+  @BelongsTo(() => Usuario, 'id_contacto')
   contacto: Usuario;
 
   @ForeignKey(() => Usuario)
   idUsuario: number;
 
-  @BelongsTo(() => Usuario, 'idUsuario')
+  @BelongsTo(() => Usuario, 'id_usuario')
   usuario: Usuario;
 }

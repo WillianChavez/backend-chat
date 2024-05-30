@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString, ValidateIf } from 'class-validator';
 import { Entornos } from '../env-config/enviroments';
 import { Dialect } from 'sequelize';
 import { IsValidDialect } from '../validators/dialect.validator';
@@ -29,7 +29,7 @@ export class VariablesDeEntorno {
 
   @IsNotEmpty()
   @IsString()
-  DB_DATABASE: string;
+  DB_NAME: string;
 
   @IsNotEmpty()
   @IsString()
@@ -45,6 +45,30 @@ export class VariablesDeEntorno {
   DB_DIALECT: Dialect;
 
   @IsNotEmpty()
+  @IsBoolean()
+  DB_LOGGER: boolean;
+
+  @IsNotEmpty()
   @IsString()
   APP_DEBUG: string;
+
+  @IsString()
+  @ValidateIf((object, value) => (value ?? '').trim().length > 0)
+  MAIL_HOST!: string;
+
+  @IsNumber()
+  @ValidateIf((object, value) => (value ?? '').toString().trim().length > 0)
+  MAIL_PORT!: number;
+
+  @IsString()
+  @ValidateIf((object, value) => (value ?? '').trim().length > 0)
+  MAIL_USER!: string;
+
+  @IsString()
+  @ValidateIf((object, value) => (value ?? '').trim().length > 0)
+  MAIL_PASS!: string;
+
+  @IsString()
+  @ValidateIf((object, value) => (value ?? '').trim().length > 0)
+  MAIL_FROM!: string;
 }

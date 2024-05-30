@@ -10,7 +10,7 @@ import {
 import Usuario from './usuario.model';
 
 @Table({
-  tableName: 'mnt_contacto_usuario',
+  underscored: true, tableName: 'mnt_contacto_usuario',
 })
 export default class ContactoUsuario extends Model {
   @PrimaryKey
@@ -18,15 +18,18 @@ export default class ContactoUsuario extends Model {
   @Column
   id: number;
 
+  @Column
+  aceptado: boolean;
+
   @ForeignKey(() => Usuario)
   idContacto: number;
 
-  @BelongsTo(() => Usuario, 'idContacto')
+  @BelongsTo(() => Usuario, 'id_contacto')
   contacto: Usuario;
 
   @ForeignKey(() => Usuario)
   idUsuario: number;
 
-  @BelongsTo(() => Usuario, 'idUsuario')
+  @BelongsTo(() => Usuario, 'id_usuario')
   usuario: Usuario;
 }

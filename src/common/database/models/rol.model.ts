@@ -3,7 +3,7 @@ import RolOpcionMenu from './rol-opcion-menu.model';
 import UsuarioChat from './usuario-chat.model';
 
 @Table({
-  tableName: 'ctl_rol',
+  underscored: true,  tableName: 'ctl_rol',
 })
 export default class Rol extends Model {
   @PrimaryKey

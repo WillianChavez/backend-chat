@@ -13,6 +13,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { CreateGroupChatDto } from '../dto/group-chat.dto';
 import { UpdatePreferenciaChatDto } from '../dto/preferencia-chat.dto';
 import Reaccion from 'src/common/database/models/reaccion.model';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class ChatService {
@@ -143,17 +144,28 @@ export class ChatService {
       include: [
         {
           model: UsuarioChat,
-          where: filterUsuario,
-          attributes: [],
+          as: 'miembros',
+          attributes: ['id_usuario'],
+          where: {
+            idUsuario: {
+              [Op.ne]: idUsuario,
+            },
+          },
+          include: [
+            {
+              model: Usuario,
+              attributes: ['nombre'],
+            },
+          ],
         },
         {
           model: PreferenciaChat,
-          attributes: ['nombre', 'fondo_color', 'id_usuario'],
+          attributes: ['nombre', 'fondo_color', 'id_usuario', 'id'],
           where: filterUsuario,
         },
         {
           model: TipoChat,
-          attributes: ['nombre'],
+          attributes: ['nombre', 'id'],
         },
         {
           model: Mensaje,

@@ -15,6 +15,7 @@ import { NewMessageDto } from './dto/new-message.dto';
 import { NewReactionMessageDto } from './dto/new-reaction-message.dto';
 import { AuthService } from 'src/auth/services/auth.service';
 import { UsuarioService } from 'src/usuario/services/usuario.service';
+import { BadRequestException } from '@nestjs/common';
 
 @WebSocketGateway()
 export class ChatRealTimeGateway
@@ -76,6 +77,7 @@ export class ChatRealTimeGateway
     const token = client.handshake.headers.authorization || client.handshake.auth.token;
     if (token) {
       const user = await this.authService.decryptoToken(token);
+      if (!user || !user.id) client.emit('error', 'Invalid token');
       const { rooms } = await this.chatRealTimeService.getRoomsForUser(user.id);
       client.join(rooms);
     }

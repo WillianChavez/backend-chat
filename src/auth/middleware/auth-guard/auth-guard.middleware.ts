@@ -9,12 +9,11 @@ import Usuario from 'src/common/database/models/usuario.model';
 
 @Injectable()
 export class AuthGuardMiddleware implements NestMiddleware<Request, Response> {
-
   constructor(
     @InjectModel(Usuario)
     private usuarioModel: typeof Usuario,
     private jwtService: JwtService
-  ) { }
+  ) {}
 
   async use(req: Request, res: Response, next: () => void) {
     // Get token from request headers
@@ -22,7 +21,7 @@ export class AuthGuardMiddleware implements NestMiddleware<Request, Response> {
 
     if (!token || type.toLowerCase() !== 'bearer') {
       throw new UnauthorizedException({
-        message: 'Token no proporcionado o en formato incorrecto.'
+        message: 'Token no proporcionado o en formato incorrecto.',
       });
     }
 
@@ -33,18 +32,18 @@ export class AuthGuardMiddleware implements NestMiddleware<Request, Response> {
       where: {
         id: datosJwt.id,
       },
-      include: [{
-        model: DispositivoVinculado,
-        where: {
-          id: datosJwt.idDispositivo
-        }
-      }]
+      include: [
+        {
+          model: DispositivoVinculado,
+          where: {
+            id: datosJwt.idDispositivo,
+          },
+        },
+      ],
     });
 
     if (!user) {
-      throw new UnauthorizedException({
-        message: 'Usuario no encontrado.'
-      });
+      throw new UnauthorizedException('Usuario no encontrado.');
     }
 
     // Injec in request

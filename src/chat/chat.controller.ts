@@ -47,6 +47,11 @@ export class ChatController {
     return this.chatService.findAll(idUsuario);
   }
 
+  @Get('/:idChat/mensajes')
+  findMessages(@Param('idChat') idChat: number) {
+    return this.chatService.getMessagesByChat(idChat);
+  }
+
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   create(@Body() createChatDto: CreateChatDto, @UploadedFile() file: Express.Multer.File) {

@@ -21,50 +21,34 @@ export class AuthService {
     private tfaService: TfaService
   ) {}
 
-  /*
-   * Esta función se encarga de autenticar a un usuario
-   * Recibe como parámetros el nombre de usuario y la contraseña
-   * Devuelve un booleano que indica si la autenticación fue exitosa o no
-   */
   async auth(auth: AuthDto) {
-    /*
-     * Buscar el usuario en la base de datos
-     */
     const usuario = await this.usuarioModel.findOne({
       where: {
         nombre: auth.username,
       },
     });
 
-    /*
-     * Si el usuario no existe, la función devolverá false
-     */
     if (!usuario) {
       throw new UnauthorizedException({
         message: 'Usuario o contraseña incorrectos.',
       });
     }
 
-    /*
-     * Comparar la contraseña ingresada con la contraseña almacenada en la base de datos
-     * Si las contraseñas coinciden, la función devolverá true
-     */
     if (!(await bcrypt.compare(auth.password, usuario.contra))) {
       throw new UnauthorizedException({
         message: 'Usuario o contraseña incorrectos.',
       });
     }
 
-    /**
-     * Verificar si necesita segundo factor de autenticación
-     */
     const tfaRequerido = await this.tfaService.needTfa(usuario.id);
 
-    return {
+    const userTfaDto: UserTfaDto = {
       ...usuario.hidePassword(),
       tfaRequerido,
       tfaPasado: !tfaRequerido,
-    } as UserTfaDto;
+    };
+
+    return userTfaDto;
   }
 
   /**

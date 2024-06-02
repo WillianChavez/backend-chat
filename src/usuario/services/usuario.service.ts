@@ -12,7 +12,6 @@ import PreferenciaUsuario from 'src/common/database/models/preferencia-usuario.m
 
 @Injectable()
 export class UsuarioService {
-
   constructor(
     @InjectModel(Usuario)
     private usuarioModel: typeof Usuario,
@@ -21,41 +20,43 @@ export class UsuarioService {
 
     @InjectModel(PreferenciaUsuario)
     private preferenciaUsuarioModel: typeof PreferenciaUsuario
-
-
-  ) { }
-
+  ) {}
 
   async create(createUsuarioDto: CreateUsuarioDto) {
-    const usuarioExistente = await this.usuarioModel.findOne(({
+    const usuarioExistente = await this.usuarioModel.findOne({
       where: {
-        nombre: createUsuarioDto.nombre_usuario
-      }
-    }));
+        nombre: createUsuarioDto.nombre_usuario,
+      },
+    });
 
     if (usuarioExistente) throw new ConflictException('Usuario ya existe');
 
     const perfilExistente = await this.perfilModel.findOne({
       where: {
-        correo: createUsuarioDto.correo
-      }
+        correo: createUsuarioDto.correo,
+      },
     });
 
     if (perfilExistente) throw new ConflictException('Correo ya registrado');
 
-    const usuario = (await this.usuarioModel.create({
-      nombre: createUsuarioDto.nombre_usuario,
-      contra: await bcrypt.hash(createUsuarioDto.contra, 10),
-      perfil: {
-        nombre: createUsuarioDto.nombre,
-        correo: createUsuarioDto.correo,
-      }
-    }, {
-      include: [Perfil],
-      attributes: {
-        exclude: ['contra']
-      }
-    })).hidePassword();
+    const usuario = (
+      await this.usuarioModel.create(
+        {
+          nombre: createUsuarioDto.nombre_usuario,
+          contra: await bcrypt.hash(createUsuarioDto.contra, 10),
+          perfil: {
+            nombre: createUsuarioDto.nombre,
+            correo: createUsuarioDto.correo,
+          },
+        },
+        {
+          include: [Perfil],
+          attributes: {
+            exclude: ['contra'],
+          },
+        }
+      )
+    ).hidePassword();
 
     return usuario;
   }
@@ -64,12 +65,13 @@ export class UsuarioService {
     return await this.usuarioModel.findByPk(id, {
       include: [Perfil],
       attributes: {
-        exclude: ['contra']
-      }
+        exclude: ['contra'],
+      },
     });
   }
 
   async exist(id: number) {
+    if (!id) throw new NotFoundException('Usuario no existe');
     const usuario = await this.usuarioModel.findByPk(id);
     const exist = !!usuario;
     if (!exist) throw new NotFoundException(`El usuario con el id ${id} no existe`);
@@ -80,8 +82,8 @@ export class UsuarioService {
     return await this.usuarioModel.findAll({
       include: [Perfil],
       attributes: {
-        exclude: ['contra']
-      }
+        exclude: ['contra'],
+      },
     });
   }
 
@@ -95,16 +97,15 @@ export class UsuarioService {
         where: {
           nombre: updateUsuarioDto.nombre_usuario,
           id: {
-            [Op.not]: usuario.id
-          }
-        }
+            [Op.not]: usuario.id,
+          },
+        },
       });
 
       if (usuarioExistente) throw new ConflictException('Usuario ya existe');
 
       usuario.nombre = updateUsuarioDto.nombre_usuario;
-
-    };
+    }
 
     await usuario.save();
 
@@ -145,20 +146,24 @@ export class UsuarioService {
     return usuario;
   }
 
-  async updatePreferencias(idUsuario: number, updateUsuarioPreferenciasDto: UpdateUsuarioPreferenciasDto) {
-
+  async updatePreferencias(
+    idUsuario: number,
+    updateUsuarioPreferenciasDto: UpdateUsuarioPreferenciasDto
+  ) {
     const { idFuente, temaOscuro } = updateUsuarioPreferenciasDto;
     const usuario = await this.exist(idUsuario);
 
-
-    const preferencias = await this.preferenciaUsuarioModel.update({
-      tema_oscuro: temaOscuro,
-      id_fuente: idFuente
-    }, {
-      where: {
-        id_usuario: idUsuario
+    const preferencias = await this.preferenciaUsuarioModel.update(
+      {
+        tema_oscuro: temaOscuro,
+        id_fuente: idFuente,
+      },
+      {
+        where: {
+          id_usuario: idUsuario,
+        },
       }
-    });
+    );
 
     return preferencias;
   }

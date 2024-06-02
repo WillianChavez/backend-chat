@@ -43,6 +43,13 @@ export class UsuarioController {
     return await this.usuarioService.create(usuarioDto);
   }
 
+  @UseGuards(AuthGuardMiddleware, AuthTfaGuardMiddleware)
+  @Get(':id/perfil')
+  async getPerfil(@Param('id') id: number) {
+    await this.usuarioService.exist(id);
+    return await this.perfilService.getPerfil(id);
+  }
+
   @Get()
   async index() {
     return await this.usuarioService.index();
@@ -52,7 +59,6 @@ export class UsuarioController {
   async show(@Param('id', ParseIntPipe) id: number) {
     return await this.usuarioService.show(id);
   }
-
 
   @Patch(':id')
   async update(@Param('id', ParseIntPipe) id: number, @Body() usuarioDto: UpdateUsuarioDto) {

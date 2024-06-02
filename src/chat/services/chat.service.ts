@@ -275,4 +275,13 @@ export class ChatService {
     const reacciones = await this.reaccionModel.findAll();
     return reacciones;
   }
+
+  async getMessagesByChat(idChat: number) {
+    const chat = await this.chatModel.findByPk(idChat);
+
+    const mensajes = await chat.$get('mensajes');
+
+    if (!chat) throw new BadRequestException('Chat no encontrado');
+    return mensajes;
+  }
 }

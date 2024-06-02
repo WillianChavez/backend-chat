@@ -43,6 +43,9 @@ export default class Chat extends Model {
   @HasMany(() => UsuarioChat)
   usuarios: Usuario[];
 
+  @HasMany(() => UsuarioChat, { as: 'miembros' })
+  miembros: UsuarioChat[];
+
   @HasMany(() => Mensaje)
   mensajes: Mensaje[];
 }

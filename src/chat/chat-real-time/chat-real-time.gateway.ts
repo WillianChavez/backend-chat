@@ -16,6 +16,8 @@ import { NewReactionMessageDto } from './dto/new-reaction-message.dto';
 import { AuthService } from 'src/auth/services/auth.service';
 import { UsuarioService } from 'src/usuario/services/usuario.service';
 import { BadRequestException } from '@nestjs/common';
+import { FriendRequestDto } from 'src/contacts/dto/friend-request.dto';
+import { ContactsService } from 'src/contacts/services/contacts.service';
 
 @WebSocketGateway()
 export class ChatRealTimeGateway
@@ -28,7 +30,9 @@ export class ChatRealTimeGateway
 
     private readonly authService: AuthService,
 
-    private readonly usuarioService: UsuarioService
+    private readonly usuarioService: UsuarioService,
+
+    private readonly contactsService: ContactsService
   ) {}
 
   afterInit() {
@@ -86,5 +90,23 @@ export class ChatRealTimeGateway
     }
 
     client.emit('joined-room', 'Joined room successfully');
+  }
+
+  async sendFriendRequest(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() friendRequestDto: FriendRequestDto
+  ) {
+    let temp = JSON.parse(JSON.stringify(friendRequestDto)) as FriendRequestDto;
+    if (typeof temp === 'string') temp = JSON.parse(temp) as FriendRequestDto;
+
+    const { idContacto, idUsuario } = temp;
+
+    await this.usuarioService.exist(idContacto);
+    await this.usuarioService.exist(idUsuario);
+
+    const friendRequest = await this.contactsService.sendFriendRequest(idUsuario, idContacto);
+
+    // enviar evento de solicitud de amistad al idContacto
+    client.broadcast.emit(`new-friend-request-${idContacto}`, friendRequest);
   }
 }

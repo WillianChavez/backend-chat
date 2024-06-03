@@ -92,6 +92,7 @@ export class ChatRealTimeGateway
     client.emit('joined-room', 'Joined room successfully');
   }
 
+  @SubscribeMessage('send-friend-request')
   async sendFriendRequest(
     @ConnectedSocket() client: Socket,
     @MessageBody() friendRequestDto: FriendRequestDto

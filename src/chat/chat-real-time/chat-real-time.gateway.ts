@@ -50,8 +50,11 @@ export class ChatRealTimeGateway
     @MessageBody() newMessageDto: NewMessageDto,
     @ConnectedSocket() client: Socket
   ) {
-    const usuario = await this.usuarioService.exist(newMessageDto.idUsuario);
-    const { room, message } = await this.chatRealTimeService.saveMessage(newMessageDto);
+    let temp = JSON.parse(JSON.stringify(newMessageDto)) as NewMessageDto;
+    if (typeof temp === 'string') temp = JSON.parse(temp) as NewMessageDto;
+
+    const usuario = await this.usuarioService.exist(temp.idUsuario);
+    const { room, message } = await this.chatRealTimeService.saveMessage(temp);
     const newMessage = {
       usuario: {
         id: usuario.id,
